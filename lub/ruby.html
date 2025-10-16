@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koloid Sol Padat - Eksplorasi Interaktif</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5e6d3 0%, #e8d4c0 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        h1 {
+            color: #6b4423;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: #8b6f47;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+        
+        #canvas-container {
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        
+        canvas {
+            display: block;
+            border-radius: 10px;
+        }
+        
+        .info-box {
+            background: #fff3e6;
+            border-left: 4px solid #d4a574;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            max-width: 600px;
+        }
+        
+        .info-box h3 {
+            margin-top: 0;
+            color: #8b6f47;
+        }
+        
+        .label {
+            position: absolute;
+            background: rgba(212, 165, 116, 0.9);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            user-select: none;
+        }
+        
+        .label:hover {
+            transform: scale(1.05);
+            background: rgba(212, 165, 116, 1);
+        }
+        
+        #label-medium {
+            top: 110px;
+            left: 200px;
+        }
+        
+        #label-dispersed {
+            bottom: 120px;
+            left: 200px;
+        }
+
+        /* Styling untuk Tombol Kembali */
+        .btn-back-container {
+            margin-top: 20px;
+        }
+
+        .btn-back {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #f44336; /* Warna merah agar menonjol */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-back:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <h1>Eksplorasi Koloid: Sol Padat</h1>
+    <h1>♦️ Permata Ruby ♦️</h1>
+    <p class="subtitle">Klik label untuk mempelajari komponen sol padat!</p>
+    
+    <div id="canvas-container">
+        <canvas id="colloidCanvas" width="700" height="500"></canvas>
+        <div class="label" id="label-medium">Medium pendispersi</div>
+        <div class="label" id="label-dispersed">Fase terdispersi</div>
+    </div>
+    
+    <div class="info-box">
+        <h3>💡 Apa itu Sol Padat?</h3>
+        <p><strong>Ruby adalah contoh koloid sol padat</strong> - Kromium oksida (Cr₂O₃) atau ion Cr³⁺ (fase terdispersi) terperangkap dalam materi padat Aluminium oksida (Al₂O₃) (medium pendispersi).</p>
+        <p>Akibatnya, terbentuk sistem dua fase padat yang ketika terkena cahaya menghasilkan efek optik khas berupa warna merah.</p>
+        <p><strong>Ciri-ciri koloid sol padat:</strong></p>
+        <ul>
+            <li>Baik fase terdispersi maupun medium pendispersinya berupa padatan</li>
+            <li>Campurannya tampak homogen di mata manusia, tapi tidak homogen sempurna secara mikroskopis</li>
+            <li>Tidak dapat dipisahkan secara fisik biasa</li>
+            <li>Bersifat keras dan tidak mudah berubah bentuk</li>
+            <li>Beberapa diantaranya memiliki warna yang khas saat terkena cahaya</li>
+        </ul>
+    </div>
+
+    <div class="btn-back-container">
+        <a href="index.html#jenis-koloid" class="btn-back">← Kembali ke Jenis Koloid</a>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('colloidCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Load mattress image
+        const mattressImg = new Image();
+        mattressImg.src = 'cartoon-ruby.jpg';
+        let imageLoaded = false;
+        
+        mattressImg.onload = function() {
+            imageLoaded = true;
+        };
+        
+        // State management
+        let activeView = null; // 'medium' or 'dispersed'
+        
+        // Gas bubbles in foam (static - no movement)
+        const gasBubbles = [];
+        const bubbleCount = 200;
+        
+        // Contoh Koloid area
+        const foamX = 150;
+        const foamY = 150;
+        const foamWidth = 300;
+        const foamHeight = 200;
+        
+        // Create gas bubbles randomly distributed in foam (they won't move)
+        for (let i = 0; i < bubbleCount; i++) {
+            gasBubbles.push({
+                x: foamX + Math.random() * foamWidth,
+                y: foamY + Math.random() * foamHeight,
+                size: Math.random() * 4 + 2,
+                opacity: Math.random() * 0.3 + 0.2
+            });
+        }
+        
+        // Click handlers for labels
+        document.getElementById('label-medium').addEventListener('click', () => {
+            activeView = activeView === 'medium' ? null : 'medium';
+        });
+        
+        document.getElementById('label-dispersed').addEventListener('click', () => {
+            activeView = activeView === 'dispersed' ? null : 'dispersed';
+        });
+        
+        function drawMattress() {
+            if (imageLoaded) {
+                // Draw the mattress image
+                // Adjust these values to position and size the image nicely
+                ctx.drawImage(mattressImg, foamX - 20, foamY - 40, foamWidth + 120, foamHeight + 120);
+            } else {
+                // Fallback: Draw a simple placeholder rectangle if image hasn't loaded yet
+                ctx.fillStyle = '#e8e8e8';
+                ctx.fillRect(foamX, foamY, foamWidth, foamHeight);
+                ctx.strokeStyle = '#999';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(foamX, foamY, foamWidth, foamHeight);
+                
+                // Add text indicator
+                ctx.fillStyle = '#666';
+                ctx.font = '20px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Loading mattress image...', foamX + foamWidth/2, foamY + foamHeight/2);
+            }
+        }
+        
+        function drawMediumView() {
+            // Draw line from label to foam
+            ctx.strokeStyle = '#faf5f5';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(330, 185);
+            ctx.lineTo(330, 210);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Draw text box
+            ctx.fillStyle = '#faf5f5';
+            ctx.strokeStyle = '#d4a574';
+            ctx.lineWidth = 2;
+            
+            // Rounded rectangle for text box
+            const boxX = 245;
+            const boxY = 210;
+            const boxWidth = 190;
+            const boxHeight = 50;
+            const radius = 10;
+            
+            ctx.beginPath();
+            ctx.moveTo(boxX + radius, boxY);
+            ctx.lineTo(boxX + boxWidth - radius, boxY);
+            ctx.arcTo(boxX + boxWidth, boxY, boxX + boxWidth, boxY + radius, radius);
+            ctx.lineTo(boxX + boxWidth, boxY + boxHeight - radius);
+            ctx.arcTo(boxX + boxWidth, boxY + boxHeight, boxX + boxWidth - radius, boxY + boxHeight, radius);
+            ctx.lineTo(boxX + radius, boxY + boxHeight);
+            ctx.arcTo(boxX, boxY + boxHeight, boxX, boxY + boxHeight - radius, radius);
+            ctx.lineTo(boxX, boxY + radius);
+            ctx.arcTo(boxX, boxY, boxX + radius, boxY, radius);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            // Text
+            ctx.fillStyle = '#d4a574';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Padat:', boxX + boxWidth/2, boxY + 25);
+            ctx.font = '16px Arial';
+            ctx.fillText('Aluminium Oksida ', boxX + boxWidth/2, boxY + 45);
+        }
+        
+        function drawDispersedView() {
+            // Position for magnifying glass
+            const magX = 350;
+            const magY = 320;
+            const magnifierRadius = 80;
+            
+            // Draw line from label to magnifying glass
+            ctx.strokeStyle = '#d4a574';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(310, 385);
+            ctx.lineTo(magX, magY + magnifierRadius + 5);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Draw white background in magnifying glass
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(magX, magY, magnifierRadius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Save context
+            ctx.save();
+            
+            // Create clipping region for magnified area
+            ctx.beginPath();
+            ctx.arc(magX, magY, magnifierRadius, 0, Math.PI * 2);
+            ctx.clip();
+            
+            // Draw organized white particle (alumunium oxide)
+            const circleSize = 22;
+            const spacing = 28;
+            const cols = 6;
+            const rows = 6;
+            const startX = magX - (cols * spacing) / 2;
+            const startY = magY - (rows * spacing) / 2;
+            
+            ctx.strokeStyle = '#d9d7d7';
+            ctx.lineWidth = 3;
+            ctx.fillStyle = '#f2f0f0';
+            
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const x = startX + col * spacing;
+                    const y = startY + row * spacing;
+                    
+                    // Draw grey circle (foam cell wall)
+                    ctx.beginPath();
+                    ctx.arc(x, y, circleSize, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                }
+            }
+            
+            // Draw small red circle (chromium oxide)
+            ctx.fillStyle = '#a80202';
+            
+            // Bubbles between horizontal circles
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols - 1; col++) {
+                    const x = startX + col * spacing + spacing / 2;
+                    const y = startY + row * spacing;
+                    
+                    ctx.beginPath();
+                    ctx.arc(x, y, 6, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Add highlight
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                    ctx.beginPath();
+                    ctx.arc(x - 2, y - 2, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#a80202';
+                }
+            }
+            
+            // Bubbles between vertical circles
+            for (let row = 0; row < rows - 1; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const x = startX + col * spacing;
+                    const y = startY + row * spacing + spacing / 2;
+                    
+                    ctx.beginPath();
+                    ctx.arc(x, y, 6, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Add highlight
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                    ctx.beginPath();
+                    ctx.arc(x - 2, y - 2, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#a80202';
+                }
+            }
+            
+            // Bubbles in diagonal gaps
+            for (let row = 0; row < rows - 1; row++) {
+                for (let col = 0; col < cols - 1; col++) {
+                    const x = startX + col * spacing + spacing / 2;
+                    const y = startY + row * spacing + spacing / 2;
+                    
+                    ctx.beginPath();
+                    ctx.arc(x, y, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Add highlight
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                    ctx.beginPath();
+                    ctx.arc(x - 1.5, y - 1.5, 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#a80202';
+                }
+            }
+            
+            // Restore context
+            ctx.restore();
+            
+            // Draw magnifying glass rim
+            ctx.strokeStyle = '#2d2d2d';
+            ctx.lineWidth = 6;
+            ctx.beginPath();
+            ctx.arc(magX, magY, magnifierRadius, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // Inner rim
+            ctx.strokeStyle = '#1a1a1a';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(magX, magY, magnifierRadius - 3, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // Handle
+            const handleAngle = Math.PI / 4;
+            const handleX = magX + Math.cos(handleAngle) * magnifierRadius;
+            const handleY = magY + Math.sin(handleAngle) * magnifierRadius;
+            const handleLength = 70;
+            const handleEndX = handleX + Math.cos(handleAngle) * handleLength;
+            const handleEndY = handleY + Math.sin(handleAngle) * handleLength;
+            
+            ctx.strokeStyle = '#3d2817';
+            ctx.lineWidth = 10;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(handleX, handleY);
+            ctx.lineTo(handleEndX, handleEndY);
+            ctx.stroke();
+            
+            // Draw text box
+            ctx.fillStyle = 'rgba(212, 165, 116, 0.95)';
+            ctx.strokeStyle = '#8b6f47';
+            ctx.lineWidth = 2;
+            
+            // Rounded rectangle for text box
+            const boxX = magX - 70;
+            const boxY = magY + magnifierRadius + 20;
+            const boxWidth = 150;
+            const boxHeight = 50;
+            const radius = 10;
+            
+            ctx.beginPath();
+            ctx.moveTo(boxX + radius, boxY);
+            ctx.lineTo(boxX + boxWidth - radius, boxY);
+            ctx.arcTo(boxX + boxWidth, boxY, boxX + boxWidth, boxY + radius, radius);
+            ctx.lineTo(boxX + boxWidth, boxY + boxHeight - radius);
+            ctx.arcTo(boxX + boxWidth, boxY + boxHeight, boxX + boxWidth - radius, boxY + boxHeight, radius);
+            ctx.lineTo(boxX + radius, boxY + boxHeight);
+            ctx.arcTo(boxX, boxY + boxHeight, boxX, boxY + boxHeight - radius, radius);
+            ctx.lineTo(boxX, boxY + radius);
+            ctx.arcTo(boxX, boxY, boxX + radius, boxY, radius);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            // Text
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Padat:', boxX + boxWidth/2, boxY + 25);
+            ctx.font = '16px Arial';
+            ctx.fillText('Kromium Oksida', boxX + boxWidth/2, boxY + 45);
+        }
+        
+        function animate() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw scene
+            drawMattress();
+            
+            // Draw active view
+            if (activeView === 'medium') {
+                drawMediumView();
+            } else if (activeView === 'dispersed') {
+                drawDispersedView();
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Start animation
+        animate();
+    </script>
+</body>
+</html>

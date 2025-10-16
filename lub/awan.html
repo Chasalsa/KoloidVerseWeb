@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koloid Awan - Eksplorasi Interaktif</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #87CEEB 0%, #E0F6FF 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        h1 {
+            color: #2c5aa0;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: #4a7ba7;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+        
+        #canvas-container {
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        
+        canvas {
+            display: block;
+            border-radius: 10px;
+            background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 100%);
+        }
+        
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #4a90e2;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            max-width: 600px;
+        }
+        
+        .info-box h3 {
+            margin-top: 0;
+            color: #2c5aa0;
+        }
+        
+        .label {
+            position: absolute;
+            background: rgba(74, 226, 99, 0.9);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            user-select: none;
+        }
+        
+        .label:hover {
+            transform: scale(1.05);
+            background: rgba(74, 144, 226, 1);
+        }
+        
+        #label-medium {
+            top: 150px;
+            left: 180px;
+        }
+        
+        #label-dispersed {
+            bottom: 120px;
+            left: 180px;
+        }
+
+    /* Styling untuk Tombol Kembali */
+        .btn-back-container {
+            margin-top: 20px;
+        }
+
+        .btn-back {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #f44336; /* Warna merah agar menonjol */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-back:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+    </style>
+</head>
+<body>
+    <h1>Eksplorasi Koloid: Aerosol</h1>
+    <h1>☁️ Awan ☁️</h1>
+    <p class="subtitle">Klik label biru untuk mempelajari komponen aerosol cair!</p>
+    
+    <div id="canvas-container">
+        <canvas id="colloidCanvas" width="700" height="500"></canvas>
+        <div class="label" id="label-medium">Medium pendispersi</div>
+        <div class="label" id="label-dispersed">Fase terdispersi</div>
+    </div>
+    
+    <div class="info-box">
+        <h3>💡 Apa itu Aerosol Cair?</h3>
+        <p><strong>Awan adalah contoh koloid aerosol cair</strong> - butiran air (fase terdispersi) tersuspensi dalam udara (medium pendispersi).</p>
+        <p>Tetesan air berukuran sangat kecil (1-100 mikrometer) melayang di udara dan membentuk awan yang kita lihat di langit.</p>
+        <p><strong>Ciri-ciri koloid awan:</strong></p>
+        <ul>
+            <li>Butiran air tersuspensi di udara</li>
+            <li>Terlihat putih karena hamburan cahaya (efek Tyndall)</li>
+            <li>Dapat bergerak mengikuti angin</li>
+            <li>Bisa berubah menjadi hujan jika tetesan membesar</li>
+        </ul>
+    </div>
+
+    <div class="btn-back-container">
+        <a href="index.html#jenis-koloid" class="btn-back">← Kembali ke Jenis Koloid</a>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('colloidCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // State management
+        let activeView = null; // 'medium' or 'dispersed'
+        
+        // Cloud particles (water droplets)
+        const waterDroplets = [];
+        const dropletCount = 400;
+        
+        // Cloud shape parameters
+        const cloudCenterX = 350;
+        const cloudCenterY = 250;
+        const cloudWidth = 250;
+        const cloudHeight = 150;
+        
+        // Create water droplets in cloud shape
+        for (let i = 0; i < dropletCount; i++) {
+            // Create elliptical cloud shape
+            const angle = Math.random() * Math.PI * 2;
+            const radiusX = Math.random() * cloudWidth / 2;
+            const radiusY = Math.random() * cloudHeight / 2;
+            
+            waterDroplets.push({
+                x: cloudCenterX + Math.cos(angle) * radiusX,
+                y: cloudCenterY + Math.sin(angle) * radiusY,
+                size: Math.random() * 2 + 1,
+                speedX: (Math.random() - 0.5) * 0.4,
+                speedY: (Math.random() - 0.5) * 0.2,
+                opacity: Math.random() * 0.3 + 0.2
+            });
+        }
+        
+        // Click handlers for labels
+        document.getElementById('label-medium').addEventListener('click', () => {
+            activeView = activeView === 'medium' ? null : 'medium';
+        });
+        
+        document.getElementById('label-dispersed').addEventListener('click', () => {
+            activeView = activeView === 'dispersed' ? null : 'dispersed';
+        });
+        
+        function drawCloud() {
+            // Draw fluffy cloud shape with multiple overlapping circles
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            
+            // Main large cloud (center)
+            ctx.beginPath();
+            ctx.arc(cloudCenterX - 80, cloudCenterY + 20, 70, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(cloudCenterX - 20, cloudCenterY - 10, 80, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(cloudCenterX + 50, cloudCenterY + 10, 75, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(cloudCenterX + 100, cloudCenterY + 30, 60, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(cloudCenterX, cloudCenterY + 40, 80, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Additional cloud on the left
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.beginPath();
+            ctx.arc(120, 150, 50, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(160, 140, 55, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(190, 155, 45, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Additional cloud on the right
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+            ctx.beginPath();
+            ctx.arc(550, 180, 45, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(580, 170, 50, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(610, 185, 40, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Small cloud top left
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.beginPath();
+            ctx.arc(150, 80, 35, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(175, 75, 38, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Small cloud top right
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+            ctx.beginPath();
+            ctx.arc(520, 90, 32, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(545, 85, 35, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Bottom left cloud
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.beginPath();
+            ctx.arc(100, 350, 40, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(130, 345, 45, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(155, 355, 38, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Bottom right cloud
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+            ctx.beginPath();
+            ctx.arc(560, 370, 42, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(590, 365, 48, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(620, 375, 40, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        function updateDroplets() {
+            waterDroplets.forEach(droplet => {
+                // Update position
+                droplet.x += droplet.speedX;
+                droplet.y += droplet.speedY;
+                
+                // Keep droplets within cloud area (bounce back)
+                const dx = droplet.x - cloudCenterX;
+                const dy = droplet.y - cloudCenterY;
+                const distance = Math.sqrt((dx * dx) / (cloudWidth * cloudWidth / 4) + (dy * dy) / (cloudHeight * cloudHeight / 4));
+                
+                if (distance > 1) {
+                    droplet.speedX *= -1;
+                    droplet.speedY *= -1;
+                }
+            });
+        }
+        
+        function drawMediumView() {
+            // Draw line from label to text box below
+            ctx.strokeStyle = '#4a90e2';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(330, 200);
+            ctx.lineTo(330, 260);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Draw text box
+            ctx.fillStyle = 'rgba(74, 144, 226, 0.95)';
+            ctx.strokeStyle = '#2c5aa0';
+            ctx.lineWidth = 2;
+            
+            // Rounded rectangle for text box
+            const boxX = 255;
+            const boxY = 250;
+            const boxWidth = 130;
+            const boxHeight = 50;
+            const radius = 10;
+            
+            ctx.beginPath();
+            ctx.moveTo(boxX + radius, boxY);
+            ctx.lineTo(boxX + boxWidth - radius, boxY);
+            ctx.arcTo(boxX + boxWidth, boxY, boxX + boxWidth, boxY + radius, radius);
+            ctx.lineTo(boxX + boxWidth, boxY + boxHeight - radius);
+            ctx.arcTo(boxX + boxWidth, boxY + boxHeight, boxX + boxWidth - radius, boxY + boxHeight, radius);
+            ctx.lineTo(boxX + radius, boxY + boxHeight);
+            ctx.arcTo(boxX, boxY + boxHeight, boxX, boxY + boxHeight - radius, radius);
+            ctx.lineTo(boxX, boxY + radius);
+            ctx.arcTo(boxX, boxY, boxX + radius, boxY, radius);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            // Text
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Gas:', boxX + boxWidth/2, boxY + 25);
+            ctx.font = '20px Arial';
+            ctx.fillText('Udara', boxX + boxWidth/2, boxY + 45);
+        }
+        
+        function drawDispersedView() {
+            // Draw magnifying glass at a fixed position in center-bottom
+            const magX = 350;
+            const magY = 300;
+            const magnifierRadius = 80;
+            
+            // Draw line from label to magnifying glass
+            ctx.strokeStyle = '#4a90e2';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(310, 400);
+            ctx.lineTo(magX - 20, magY + magnifierRadius - 10);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Draw sky blue background circle first (before clipping)
+            ctx.fillStyle = '#E0F6FF';
+            ctx.beginPath();
+            ctx.arc(magX, magY, magnifierRadius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Save context
+            ctx.save();
+            
+            // Create clipping region for magnified area
+            ctx.beginPath();
+            ctx.arc(magX, magY, magnifierRadius, 0, Math.PI * 2);
+            ctx.clip();
+            
+            // Draw magnified water droplets
+            waterDroplets.forEach(droplet => {
+                const dx = droplet.x - magX;
+                const dy = droplet.y - magY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < magnifierRadius / 2.5) {
+                    // Magnified position
+                    const magnification = 3;
+                    const magDropletX = magX + dx * magnification;
+                    const magDropletY = magY + dy * magnification;
+                    
+                    // Draw magnified water droplet (blue tint)
+                    ctx.fillStyle = `rgba(100, 180, 255, ${droplet.opacity + 0.4})`;
+                    ctx.beginPath();
+                    ctx.arc(magDropletX, magDropletY, droplet.size * magnification, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Draw droplet highlight
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                    ctx.beginPath();
+                    ctx.arc(magDropletX - droplet.size * 0.7, magDropletY - droplet.size * 0.7, 
+                           droplet.size * magnification * 0.4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+            
+            // Restore context
+            ctx.restore();
+            
+            // Draw magnifying glass rim
+            ctx.strokeStyle = '#5d4e37';
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            ctx.arc(magX, magY, magnifierRadius, 0, Math.PI * 2);
+            ctx.stroke();
+
+            
+            // Handle
+            const handleAngle = Math.PI / 4;
+            const handleX = magX + Math.cos(handleAngle) * magnifierRadius;
+            const handleY = magY + Math.sin(handleAngle) * magnifierRadius;
+            const handleLength = 70;
+            const handleEndX = handleX + Math.cos(handleAngle) * handleLength;
+            const handleEndY = handleY + Math.sin(handleAngle) * handleLength;
+            
+            ctx.strokeStyle = '#5d4e37';
+            ctx.lineWidth = 8;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(handleX, handleY);
+            ctx.lineTo(handleEndX, handleEndY);
+            ctx.stroke();
+            
+            // Draw text box below magnifying glass
+            ctx.fillStyle = 'rgba(74, 144, 226, 0.95)';
+            ctx.strokeStyle = '#2c5aa0';
+            ctx.lineWidth = 2;
+            
+            // Rounded rectangle for text box
+            const boxX = magX - 70;
+            const boxY = magY + magnifierRadius + 20;
+            const boxWidth = 140;
+            const boxHeight = 50;
+            const radius = 10;
+            
+            ctx.beginPath();
+            ctx.moveTo(boxX + radius, boxY);
+            ctx.lineTo(boxX + boxWidth - radius, boxY);
+            ctx.arcTo(boxX + boxWidth, boxY, boxX + boxWidth, boxY + radius, radius);
+            ctx.lineTo(boxX + boxWidth, boxY + boxHeight - radius);
+            ctx.arcTo(boxX + boxWidth, boxY + boxHeight, boxX + boxWidth - radius, boxY + boxHeight, radius);
+            ctx.lineTo(boxX + radius, boxY + boxHeight);
+            ctx.arcTo(boxX, boxY + boxHeight, boxX, boxY + boxHeight - radius, radius);
+            ctx.lineTo(boxX, boxY + radius);
+            ctx.arcTo(boxX, boxY, boxX + radius, boxY, radius);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            // Text
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Cairan:', boxX + boxWidth/2, boxY + 25);
+            ctx.font = '20px Arial';
+            ctx.fillText('Tetesan Air', boxX + boxWidth/2, boxY + 45);
+        }
+        
+        function animate() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw scene
+            drawCloud();
+            updateDroplets();
+            
+            // Draw active view
+            if (activeView === 'medium') {
+                drawMediumView();
+            } else if (activeView === 'dispersed') {
+                drawDispersedView();
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Start animation
+        animate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembelajaran Koloid - Busa Padat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #c7d2fe 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #312e81;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #374151;
+            margin-bottom: 30px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-medium {
+            background-color: #16a34a;
+        }
+
+        .btn-fase {
+            background-color: #9333ea;
+        }
+
+        .animation-area {
+            position: relative;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .mattress-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .mattress-text {
+            color: #6b7280;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .mattress-subtext {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .medium-label {
+            position: absolute;
+            top: 25%;
+            left: 40%;
+            display: none;
+            align-items: center;
+            gap: 15px;
+            z-index: 10;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .medium-label.show {
+            display: flex;
+        }
+
+        .medium-line {
+            width: 120px;
+            height: 4px;
+            background-color: #16a34a;
+        }
+
+        .medium-box {
+            background-color: #16a34a;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .magnifier {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            left: 50px;
+            top: 50px;
+            display: none;
+            cursor: move;
+            z-index: 20;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .magnifier.show {
+            display: block;
+        }
+
+        .magnifier-glass {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border: 8px solid #1f2937;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .magnifier-content {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f3e8ff 0%, #fce7f3 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .microscope-icon {
+            font-size: 40px;
+            margin-bottom: 5px;
+        }
+
+        .magnifier-text {
+            font-size: 12px;
+            font-weight: bold;
+            color: #374151;
+            text-align: center;
+        }
+
+        .magnifier-subtext {
+            font-size: 10px;
+            color: #6b7280;
+        }
+
+        .glass-shine {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 30px;
+            height: 30px;
+            background: white;
+            opacity: 0.4;
+            border-radius: 50%;
+            filter: blur(5px);
+        }
+
+        .magnifier-handle {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 60px;
+            background-color: #1f2937;
+            border-radius: 10px;
+        }
+
+        .magnifier-handle-grip {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 20px;
+            background-color: #374151;
+            border-radius: 50%;
+        }
+
+        .move-icon {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #9333ea;
+            color: white;
+            padding: 5px;
+            border-radius: 50%;
+            font-size: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-panel {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-top: 25px;
+        }
+
+        .info-title {
+            color: #312e81;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .info-item strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .info-item.medium strong {
+            color: #16a34a;
+        }
+
+        .info-item.fase strong {
+            color: #9333ea;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pembelajaran Koloid: Busa Padat (Solid Foam)</h1>
+        <p class="subtitle">Contoh: Kasur Busa</p>
+
+        <div class="button-container">
+            <button class="btn-medium" onclick="toggleMedium()">Medium Pendispersi</button>
+            <button class="btn-fase" onclick="toggleFase()">Fase Terdispersi</button>
+        </div>
+        <div class="animation-area" id="animationArea">
+            <img 
+            src="kasur-busa.png" 
+            alt="Kasur Busa" 
+            style="
+                position: absolute; 
+                top: 50%; 
+                left: 50%; 
+                transform: translate(-50%, -50%); 
+                width: 150%; 
+                height: auto;
+                max-height: 100%; 
+                object-fit: contain; 
+                z-index: 1;
+    ">
+
+            <div class="medium-label" id="mediumLabel">
+                <div class="medium-line"></div>
+                <div class="medium-box">Padat</div>
+            </div>
+
+            <div class="magnifier" id="magnifier" onmousedown="startDrag(event)">
+                <div class="magnifier-glass">
+                    <div class="magnifier-content">
+                    <img 
+                    src="mikroskopis.png" 
+                    alt="Struktur Busa" 
+                    style="
+                        width: 50%; 
+                        height: 50%;
+                        object-fit: cover;
+    ">
+                    </div>
+                    <div class="glass-shine"></div>
+                </div>
+                <div class="magnifier-handle"></div>
+                <div class="magnifier-handle-grip"></div>
+                <div class="move-icon">✋</div>
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <div class="info-title">Informasi Koloid - Busa Padat</div>
+            <div class="info-grid">
+                <div class="info-item medium">
+                    <strong>Medium Pendispersi:</strong>
+                    <span>Padat (kasur busa)</span>
+                </div>
+                <div class="info-item fase">
+                    <strong>Fase Terdispersi:</strong>
+                    <span>Gas (gelembung udara dalam busa)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var isDragging = false;
+        var offsetX = 0;
+        var offsetY = 0;
+
+        function toggleMedium() {
+            var label = document.getElementById('mediumLabel');
+            if (label.classList.contains('show')) {
+                label.classList.remove('show');
+            } else {
+                label.classList.add('show');
+            }
+        }
+
+        function toggleFase() {
+            var mag = document.getElementById('magnifier');
+            if (mag.classList.contains('show')) {
+                mag.classList.remove('show');
+            } else {
+                mag.classList.add('show');
+            }
+        }
+
+        function startDrag(e) {
+            isDragging = true;
+            var mag = document.getElementById('magnifier');
+            var rect = mag.getBoundingClientRect();
+            offsetX = e.clientX - rect.left;
+            offsetY = e.clientY - rect.top;
+            mag.style.cursor = 'grabbing';
+        }
+
+        document.addEventListener('mousemove', function(e) {
+            if (isDragging) {
+                var mag = document.getElementById('magnifier');
+                var area = document.getElementById('animationArea');
+                var areaRect = area.getBoundingClientRect();
+                
+                var newX = e.clientX - areaRect.left - offsetX;
+                var newY = e.clientY - areaRect.top - offsetY;
+                
+                var maxX = areaRect.width - 150;
+                var maxY = areaRect.height - 150;
+                
+                if (newX < 0) {
+                    newX = 0;
+                }
+                if (newX > maxX) {
+                    newX = maxX;
+                }
+                if (newY < 0) {
+                    newY = 0;
+                }
+                if (newY > maxY) {
+                    newY = maxY;
+                }
+                
+                mag.style.left = newX + 'px';
+                mag.style.top = newY + 'px';
+            }
+        });
+
+        document.addEventListener('mouseup', function() {
+            if (isDragging) {
+                isDragging = false;
+                var mag = document.getElementById('magnifier');
+                mag.style.cursor = 'move';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koloid Busa - Eksplorasi Interaktif</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffb3e7 0%, #FFD6D6 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        h1 {
+            color: #c03095;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: #d0509b;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+        
+        #canvas-container {
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        
+        canvas {
+            display: block;
+            border-radius: 10px;
+            background: linear-gradient(180deg, #ffffff 0%, #ffffff 100%);
+        }
+        
+        .info-box {
+            background: #ffe8e8;
+            border-left: 4px solid #e24aaf;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            max-width: 600px;
+        }
+        
+        .info-box h3 {
+            margin-top: 0;
+            color: #e24aaf;
+        }
+        
+        .label {
+            position: absolute;
+            background: rgba(226, 74, 196, 0.9);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            user-select: none;
+        }
+        
+        .label:hover {
+            transform: scale(1.05);
+            background: rgb(74, 216, 226);
+        }
+        
+        #label-medium {
+            top: 150px;
+            left: 180px;
+        }
+        
+        #label-dispersed {
+            bottom: 120px;
+            left: 180px;
+        }
+
+        /* Styling untuk Tombol Kembali */
+        .btn-back-container {
+            margin-top: 20px;
+        }
+
+        .btn-back {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #f44336; /* Warna merah agar menonjol */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-back:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <h1>Eksplorasi Koloid: Busa</h1>
+    <h1>🫧Busa sabun🫧</h1>
+    <p class="subtitle">Klik label ungu untuk mempelajari komponen busa!</p>
+    
+    <div id="canvas-container">
+        <canvas id="colloidCanvas" width="700" height="500"></canvas>
+        <div class="label" id="label-medium">Medium pendispersi</div>
+        <div class="label" id="label-dispersed">Fase terdispersi</div>
+    </div>
+    
+    <div class="info-box">
+        <h3>💡 Apa itu busa?</h3>
+        <p><strong>Busa adalah koloid </strong> di mana gas atau udara (fase terdispersi) tersebar di dalam zat cair (medium pendispersi).</p>
+        <p>Partikel di dalamnya membentuk sistem yang stabil dan homogen secara makroskopis.</p>
+        <p><strong>Ciri-ciri koloid busa cair:</strong></p>
+        <ul>
+            <li>Mengandung banyak gelembung gas kecil yang terperangkap di dalam cairan (seperti air sabun)</li>
+            <li>Kurang stabil (kecuali jika ada zat penstabil)</li>
+            <li>Biasanya keruh atau putih pucat karena pantulan cahaya</li>
+        </ul>
+    </div>
+
+    <div class="btn-back-container">
+        <a href="index.html#jenis-koloid" class="btn-back">← Kembali ke Jenis Koloid</a>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('colloidCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Load gelembung image
+        const odoImage = new Image();
+        odoImage.src = "gelembung.jpg";
+        let imageLoaded = false;
+
+        odoImage.onload = function() {
+            imageLoaded = true;
+        };
+
+        // State management
+        let activeView = null; // 'medium' or 'dispersed'
+
+        // gelembung particles
+        const particles = [];
+        const particleCount = 400;
+
+        // gelembung shape parameters
+        const tubeX = 150;
+        const tubeY = 150;
+        const pasteStartX = 250;
+        const pasteEndX = 620;
+        const pasteCenterY = 300;
+        
+        // Create particles
+        for (let i = 0; i < particleCount; i++) {
+            // Distribute particles in gelembung stream
+            const progress = Math.random();
+            const x = pasteStartX + (pasteEndX - pasteStartX) * progress;
+            const waveAmplitude = 30 + progress * 20;
+            const y = pasteCenterY + (Math.random() - 0.5) * waveAmplitude * 2;
+            
+            // Mix of white and light gray particles
+            const isWhite = Math.random() > 0.4;
+            
+            particles.push({
+                x: x,
+                y: y,
+                size: Math.random() * 2.5 + 1,
+                speedX: (Math.random() - 0.5) * 0.3,
+                speedY: (Math.random() - 0.5) * 0.3,
+                color: isWhite ? 'white' : 'lightgray',
+                opacity: Math.random() * 0.4 + 0.5
+            });
+        }
+        
+        // Click handlers for labels
+        document.getElementById('label-medium').addEventListener('click', () => {
+            activeView = activeView === 'medium' ? null : 'medium';
+        });
+        
+        document.getElementById('label-dispersed').addEventListener('click', () => {
+            activeView = activeView === 'dispersed' ? null : 'dispersed';
+        });
+
+        
+        function updateParticles() {
+            particles.forEach(particle => {
+                // Update position with slight drift
+                particle.x += particle.speedX;
+                particle.y += particle.speedY;
+                
+                // Keep particles within gelembung area
+                if (particle.x < pasteStartX || particle.x > pasteEndX) {
+                    particle.speedX *= -1;
+                }
+                
+                const progress = (particle.x - pasteStartX) / (pasteEndX - pasteStartX);
+                const waveAmplitude = 30 + progress * 20;
+                
+                if (particle.y < pasteCenterY - waveAmplitude || particle.y > pasteCenterY + waveAmplitude) {
+                    particle.speedY *= -1;
+                }
+            });
+        }
+        
+        function drawMediumView() {
+            // Draw line from label to text box
+            ctx.strokeStyle = '#4a90e2';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(330, 200);
+            ctx.lineTo(330, 260);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Draw text box
+            ctx.fillStyle = 'rgba(74, 144, 226, 0.95)';
+            ctx.strokeStyle = '#2c5aa0';
+            ctx.lineWidth = 2;
+            
+            // Rounded rectangle for text box
+            const boxX = 255;
+            const boxY = 250;
+            const boxWidth = 150;
+            const boxHeight = 50;
+            const radius = 10;
+            
+            ctx.beginPath();
+            ctx.moveTo(boxX + radius, boxY);
+            ctx.lineTo(boxX + boxWidth - radius, boxY);
+            ctx.arcTo(boxX + boxWidth, boxY, boxX + boxWidth, boxY + radius, radius);
+            ctx.lineTo(boxX + boxWidth, boxY + boxHeight - radius);
+            ctx.arcTo(boxX + boxWidth, boxY + boxHeight, boxX + boxWidth - radius, boxY + boxHeight, radius);
+            ctx.lineTo(boxX + radius, boxY + boxHeight);
+            ctx.arcTo(boxX, boxY + boxHeight, boxX, boxY + boxHeight - radius, radius);
+            ctx.lineTo(boxX, boxY + radius);
+            ctx.arcTo(boxX, boxY, boxX + radius, boxY, radius);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            // Text
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Cairan:', boxX + boxWidth/2, boxY + 25);
+            ctx.font = '18px Arial';
+            ctx.fillText('Air sabun', boxX + boxWidth/2, boxY + 45);
+        }
+        
+        function drawDispersedView() {
+            // Draw magnifying glass at a fixed position in center-bottom
+            const magX = 400;
+            const magY = 300;
+            const magnifierRadius = 80;
+            
+            // Draw line from label to magnifying glass
+            ctx.strokeStyle = '#4a90e2';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(310, 400);
+            ctx.lineTo(magX - 20, magY + magnifierRadius - 10);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Draw blue background circle first (before clipping)
+            ctx.fillStyle = '#87CEEB';
+            ctx.beginPath();
+            ctx.arc(magX, magY, magnifierRadius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Save context
+            ctx.save();
+            
+            // Create clipping region for magnified area
+            ctx.beginPath();
+            ctx.arc(magX, magY, magnifierRadius, 0, Math.PI * 2);
+            ctx.clip();
+            
+            // Draw magnified particles
+            particles.forEach(particle => {
+                const dx = particle.x - magX;
+                const dy = particle.y - magY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < magnifierRadius / 2.5) {
+                    // Magnified position
+                    const magnification = 3;
+                    const magParticleX = magX + dx * magnification;
+                    const magParticleY = magY + dy * magnification;
+                    
+                    // Draw magnified particle
+                    if (particle.color === 'white') {
+                        ctx.fillStyle = `rgba(255, 255, 255, ${particle.opacity + 0.3})`;
+                    } else {
+                        ctx.fillStyle = `rgba(255, 255, 255, ${particle.opacity + 0.3})`;
+                    }
+                    
+                    ctx.beginPath();
+                    ctx.arc(magParticleX, magParticleY, particle.size * magnification, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Draw particle highlight
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                    ctx.beginPath();
+                    ctx.arc(magParticleX - particle.size * 0.5, magParticleY - particle.size * 0.5, 
+                           particle.size * magnification * 0.3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+            
+            // Restore context
+            ctx.restore();
+            
+            // Draw magnifying glass rim
+            ctx.strokeStyle = '#5d4e37';
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            ctx.arc(magX, magY, magnifierRadius, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // Handle
+            const handleAngle = Math.PI / 4;
+            const handleX = magX + Math.cos(handleAngle) * magnifierRadius;
+            const handleY = magY + Math.sin(handleAngle) * magnifierRadius;
+            const handleLength = 70;
+            const handleEndX = handleX + Math.cos(handleAngle) * handleLength;
+            const handleEndY = handleY + Math.sin(handleAngle) * handleLength;
+            
+            ctx.strokeStyle = '#5d4e37';
+            ctx.lineWidth = 8;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(handleX, handleY);
+            ctx.lineTo(handleEndX, handleEndY);
+            ctx.stroke();
+            
+            // Draw text box below magnifying glass
+            ctx.fillStyle = 'rgba(74, 144, 226, 0.95)';
+            ctx.strokeStyle = '#2c5aa0';
+            ctx.lineWidth = 2;
+            
+            // Rounded rectangle for text box
+            const boxX = magX - 110;
+            const boxY = magY + magnifierRadius + 20;
+            const boxWidth = 180;
+            const boxHeight = 60;
+            const radius = 10;
+            
+            ctx.beginPath();
+            ctx.moveTo(boxX + radius, boxY);
+            ctx.lineTo(boxX + boxWidth - radius, boxY);
+            ctx.arcTo(boxX + boxWidth, boxY, boxX + boxWidth, boxY + radius, radius);
+            ctx.lineTo(boxX + boxWidth, boxY + boxHeight - radius);
+            ctx.arcTo(boxX + boxWidth, boxY + boxHeight, boxX + boxWidth - radius, boxY + boxHeight, radius);
+            ctx.lineTo(boxX + radius, boxY + boxHeight);
+            ctx.arcTo(boxX, boxY + boxHeight, boxX, boxY + boxHeight - radius, radius);
+            ctx.lineTo(boxX, boxY + radius);
+            ctx.arcTo(boxX, boxY, boxX + radius, boxY, radius);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            // Text
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Gas', boxX + boxWidth/2, boxY + 20);
+            ctx.font = '15px Arial';
+            ctx.fillText('Udara', boxX + boxWidth/2, boxY + 45);
+        }
+        
+        function animate() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw gambar gelembung di posisi tertentu
+            if (imageLoaded) {
+            ctx.drawImage(odoImage, 50, 0, 570, 500); // x, y, width, height
+            }
+
+            // Draw scene
+            updateParticles();
+            
+            // Draw active view
+            if (activeView === 'medium') {
+                drawMediumView();
+            } else if (activeView === 'dispersed') {
+                drawDispersedView();
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Start animation
+        animate();
+    </script>
+</body>
+</html>

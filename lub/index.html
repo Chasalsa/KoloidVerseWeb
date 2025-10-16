@@ -1,0 +1,560 @@
+<!DOCTYPE ahtml>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eksplorasi Dunia Koloid - Pembelajaran Interaktif</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> 
+</head>
+<body>
+
+    <div class="container">
+        <section id="landing-page" class="page active">
+            <div class="content">
+                <div class="animated-shapes">
+                    <div class="shape shape-1"></div>
+                    <div class="shape shape-2"></div>
+                    <div class="shape shape-3"></div>
+                </div>
+                <h1 class="main-title">Ada Dunia Tak Terlihat di Sekitarmu...</h1>
+                <p class="subtitle">Dari kabut pagi hingga segelas susu yang kamu minum. Penasaran? </p>
+                <button id="btn-start-explore" class="btn-primary" data-target="konsep-dasar">Mulai Eksplorasi! <span class="arrow">→</span></button>
+            </div>
+        </section>
+
+        <section id="konsep-dasar" class="page">
+            <div class="content">
+                <h2>Membandingkan Tiga Jenis Dispersi</h2>
+                <p>Pelajari karakteristik dasar dari Larutan, Koloid, dan Suspensi sebelum kita menjelajah lebih jauh.</p>
+                <div class="table-container">
+                    <table class="interactive-table">
+                        <thead>
+                            <tr>
+                                <th>Karakteristik</th>
+                                <th>Dispersi Larutan</th>
+                                <th>Dispersi Koloid</th>
+                                <th>Dispersi Kasar (Suspensi)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Homogenitas</strong></td>
+                                <td>Homogen Sejati</td>
+                                <td>Tampak Homogen (Heterogen Mikroskopis)</td>
+                                <td>Heterogen Sejati</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fase</strong></td>
+                                <td>Satu Fase</td>
+                                <td>Dua Fase</td>
+                                <td>Dua Fase</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Kejernihan</strong></td>
+                                <td>Jernih dan Tembus Cahaya</td>
+                                <td>Keruh (Menghamburkan Cahaya)</td>
+                                <td>Sangat Keruh</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Penyaringan</strong></td>
+                                <td>Tidak Dapat Disaring</td>
+                                <td>Tidak Dapat Disaring dengan Kertas Biasa</td>
+                                <td>Dapat Disaring dengan Kertas Biasa</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Stabilitas</strong></td>
+                                <td>Stabil (Tidak Mengendap)</td>
+                                <td>Stabil (Tidak Mengendap)</td>
+                                <td>Tidak Stabil (Mengendap)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Diameter Partikel</strong></td>
+                                <td>&lt; 10<sup>-7</sup> cm</td>
+                                <td>10<sup>-7</sup> &ndash; 10<sup>-5</sup> cm</td>
+                                <td>&gt; 10<sup>-5</sup> cm</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td><button id="btn-detail-larutan" class="btn-primary btn-next-detail" data-target="detail-larutan">Pelajari Lebih Lanjut →</button></td>
+                                <td><button id="btn-detail-koloid" class="btn-primary btn-next-detail" data-target="detail-koloid">Pelajari Lebih Lanjut →</button></td>
+                                <td><button id="btn-detail-kasar" class="btn-primary btn-next-detail" data-target="detail-suspensi">Pelajari Lebih Lanjut →</button></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="navigation-buttons">
+                    <button class="btn-secondary btn-back" data-target="landing-page">Kembali</button>
+                    <button class="btn-primary btn-next" data-target="eksplorasi-awal">Lanjut Eksplorasi →</button>
+                </div>
+            </div>
+        </section>
+        
+        <section id="detail-larutan" class="page detail-page">
+            <div class="content">
+                <h2>Dispersi Larutan (Homogen Sejati)</h2>
+                <p>Larutan adalah campuran yang benar-benar <strong>homogen</strong>, di mana zat terlarut tersebar merata hingga ke tingkat molekul. Partikelnya sangat kecil, kurang dari 10<sup>-7</sup> cm, sehingga tidak dapat dilihat dengan mikroskop ultra dan tidak dapat dipisahkan melalui penyaringan biasa maupun ultra.</p>
+                
+                <h3>🔬 Perbedaan Partikel dan Stabilitas</h3>
+
+                <div class="comparison-grid">
+                    <div class="comparison-item" id="comp-larutan">
+                        <h4>Larutan (Contoh: Air Teh)</h4>
+                        <div class="particle-animation-container small-anim-larutan">
+                            <div class="particle larutan-p"></div>
+                            <div class="particle larutan-p" style="animation-delay: -1s; animation-duration: 9s;"></div>
+                            <div class="particle larutan-p" style="animation-delay: -3s; animation-duration: 7s;"></div>
+                        </div>
+                        <p>Sifat Khas: <strong>Homogen</strong>, <strong>Jernih</strong>, dan <strong>Tidak dapat disaring</strong>.</p>
+                    </div>
+                    
+                    <div class="comparison-item" id="comp-koloid">
+                        <h4>Koloid (Contoh: Susu)</h4>
+                        <div class="particle-animation-container small-anim-koloid">
+                            <div class="particle koloid-p"></div>
+                            <div class="particle koloid-p" style="animation-delay: -2s; animation-duration: 8s;"></div>
+                            <div class="particle koloid-p" style="animation-delay: -4s; animation-duration: 12s;"></div>
+                        </div>
+                        <p>Sifat Khas: <strong>Tampak homogen</strong>, <strong>Keruh tanpa endapan</strong>, dan <strong>Dapat disaring dengan kertas saring ultra</strong>.</p>
+                    </div>
+                    
+                    <div class="comparison-item" id="comp-suspensi">
+                        <h4>Suspensi (Contoh: Kopi Tubruk ☕)</h4>
+                        <div class="particle-animation-container small-anim-suspensi">
+                            <div class="particle suspensi-p"></div>
+                            <div class="particle suspensi-p" style="animation-delay: -1s; animation-duration: 4s;"></div>
+                            <div class="particle suspensi-p" style="animation-delay: -3s; animation-duration: 6s;"></div>
+                        </div>
+                        <p>Sifat Khas: <strong>Heterogen</strong>, <strong>Keruh</strong>, <strong>Ada endapan</strong>, dan <strong>Dapat disaring</strong>.</p>
+                    </div>
+                </div>
+
+                <div class="info-box larutan">
+                    <p>🔑 <strong>Contoh Larutan Rumah Tangga:</strong></p>
+                    <ul>
+                        <li><strong>Air Sirup:</strong> Pemanis dan pewarna terlarut sempurna dalam air, menghasilkan campuran jernih.</li>
+                        <li><strong>Air Gula:</strong> Gula (sukrosa) terdispersi secara molekuler di dalam air.</li>
+                        <li><strong>Air Garam:</strong> Garam dapur (NaCl) terionisasi dan menyebar merata di seluruh air.</li>
+                    </ul>
+                    <p class="mt-3">Larutan selalu transparan, jernih, dan tidak pernah mengendap.</p>
+                </div>
+                
+                <div class="navigation-buttons">
+                    <button class="btn-secondary btn-back" data-target="konsep-dasar">← Kembali ke Tabel</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="detail-koloid" class="page detail-page">
+            <div class="content">
+                <h2>Dispersi Koloid (Dunia Tengah)</h2>
+                <p>Koloid adalah "dunia tengah" antara larutan dan suspensi. Ukuran partikelnya berada di antara 10<sup>-7</sup> &ndash; 10<sup>-5</sup> cm.</p>
+                
+                <h3>🔬 Perbedaan Partikel dan Stabilitas</h3>
+
+                <div class="comparison-grid">
+                    <div class="comparison-item" id="comp-larutan">
+                        <h4>Larutan (Contoh: Air Teh)</h4>
+                        <div class="particle-animation-container small-anim-larutan">
+                            <div class="particle larutan-p"></div>
+                            <div class="particle larutan-p" style="animation-delay: -1s; animation-duration: 9s;"></div>
+                            <div class="particle larutan-p" style="animation-delay: -3s; animation-duration: 7s;"></div>
+                        </div>
+                        <p>Sifat Khas: <strong>Homogen</strong>, <strong>Jernih</strong>, dan <strong>Tidak dapat disaring</strong>.</p>
+                    </div>
+                    
+                    <div class="comparison-item" id="comp-koloid">
+                        <h4>Koloid (Contoh: Susu)</h4>
+                        <div class="particle-animation-container small-anim-koloid">
+                            <div class="particle koloid-p"></div>
+                            <div class="particle koloid-p" style="animation-delay: -2s; animation-duration: 8s;"></div>
+                            <div class="particle koloid-p" style="animation-delay: -4s; animation-duration: 12s;"></div>
+                        </div>
+                        <p>Sifat Khas: <strong>Tampak homogen</strong>, <strong>Keruh tanpa endapan</strong>, dan <strong>Dapat disaring dengan kertas saring ultra</strong>.</p>
+                    </div>
+                    
+                    <div class="comparison-item" id="comp-suspensi">
+                        <h4>Suspensi (Contoh: Kopi Tubruk ☕)</h4>
+                        <div class="particle-animation-container small-anim-suspensi">
+                            <div class="particle suspensi-p"></div>
+                            <div class="particle suspensi-p" style="animation-delay: -1s; animation-duration: 4s;"></div>
+                            <div class="particle suspensi-p" style="animation-delay: -3s; animation-duration: 6s;"></div>
+                        </div>
+                        <p>Sifat Khas: <strong>Heterogen</strong>, <strong>Keruh</strong>, <strong>Ada endapan</strong>, dan <strong>Dapat disaring</strong>.</p>
+                    </div>
+                </div>
+
+                <div class="info-box koloid">
+                    <p>🔑 <strong>Contoh Koloid di Sekitar Kita:</strong></p>
+                    <ul>
+                        <li><strong>Susu:</strong> Butiran lemak (fase terdispersi) tersebar dalam air (medium pendispersi).</li>
+                        <li><strong>Kabut:</strong> Tetesan air kecil (fase terdispersi) tersebar di udara (medium pendispersi).</li>
+                        <li><strong>Mentega:</strong> Tetesan air (fase terdispersi) tersebar dalam lemak (medium pendispersi).</li>
+                    </ul>
+                    <p class="mt-3">Semua contoh ini tampak homogen dan stabil, tetapi secara mikroskopis mereka heterogen.</p>
+                </div>
+                
+                <div class="navigation-buttons">
+                    <button class="btn-secondary btn-back" data-target="konsep-dasar">← Kembali ke Tabel</button>
+                </div>
+            </div>
+        </section>
+        
+        <section id="detail-suspensi" class="page detail-page">
+            <div class="content">
+                <h2>Dispersi Kasar / Suspensi (Heterogen Sejati)</h2>
+                <p>Suspensi adalah campuran <strong>heterogen sejati</strong> yang mudah dikenali karena partikelnya sangat besar, lebih dari 10<sup>-5</sup> cm. Karena ukurannya, partikel akan <strong>mengendap</strong> seiring waktu akibat gravitasi (tidak stabil), dan campurannya terlihat <strong>sangat keruh</strong>. Partikelnya mudah dipisahkan melalui penyaringan biasa.</p>
+                
+                <h3>🔬 Perbedaan Partikel dan Stabilitas</h3>
+
+                <div class="comparison-grid">
+                    <div class="comparison-item" id="comp-larutan">
+                        <h4>Larutan (Contoh: Air Teh)</h4>
+                        <div class="particle-animation-container small-anim-larutan">
+                            <div class="particle larutan-p"></div>
+                            <div class="particle larutan-p" style="animation-delay: -1s; animation-duration: 9s;"></div>
+                            <div class="particle larutan-p" style="animation-delay: -3s; animation-duration: 7s;"></div>
+                        </div>
+                        <p>Sifat Khas: <strong>Homogen</strong>, <strong>Jernih</strong>, dan <strong>Tidak dapat disaring</strong>.</p>
+                    </div>
+                    
+                    <div class="comparison-item" id="comp-koloid">
+                        <h4>Koloid (Contoh: Susu)</h4>
+                        <div class="particle-animation-container small-anim-koloid">
+                            <div class="particle koloid-p"></div>
+                            <div class="particle koloid-p" style="animation-delay: -2s; animation-duration: 8s;"></div>
+                            <div class="particle koloid-p" style="animation-delay: -4s; animation-duration: 12s;"></div>
+                        </div>
+                        <p>Sifat Khas: <strong>Tampak homogen</strong>, <strong>Keruh tanpa endapan</strong>, dan <strong>Dapat disaring dengan kertas saring ultra</strong>.</p>
+                    </div>
+                    
+                    <div class="comparison-item" id="comp-suspensi">
+                        <h4>Suspensi (Contoh: Kopi Tubruk ☕)</h4>
+                        <div class="particle-animation-container small-anim-suspensi">
+                            <div class="particle suspensi-p"></div>
+                            <div class="particle suspensi-p" style="animation-delay: -1s; animation-duration: 4s;"></div>
+                            <div class="particle suspensi-p" style="animation-delay: -3s; animation-duration: 6s;"></div>
+                        </div>
+                        <p>Sifat Khas: <strong>Heterogen</strong>, <strong>Keruh</strong>, <strong>Ada endapan</strong>, dan <strong>Dapat disaring</strong>.</p>
+                    </div>
+                </div>
+
+                <div class="info-box suspensi">
+                    <p>🔑 <strong>Contoh Suspensi Sederhana:</strong></p>
+                    <ul>
+                        <li><strong>Air Kopi:</strong> Ampas kopi yang tidak larut akan mengendap perlahan di dasar gelas.</li>
+                        <li><strong>Air Lumpur:</strong> Partikel tanah atau pasir terlalu besar untuk larut dan akan mengendap karena gravitasi.</li>
+                    </ul>
+                    <p class="mt-3">Suspensi selalu terlihat keruh, tidak stabil, dan memiliki dua fase yang dapat dipisahkan.</p>
+                </div>
+                
+                <div class="navigation-buttons">
+                    <button class="btn-secondary btn-back" data-target="konsep-dasar">← Kembali ke Tabel</button>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="eksplorasi-awal" class="page">
+            <div class="content">
+                <h2>Apa Bedanya, ya?</h2>
+                <p>Perhatikan gambar-gambar di bawah ini. Menurutmu, apa yang membedakan ketiganya?</p>
+                <div class="drag-drop-container">
+                    <div class="items-to-drag">
+                        <h3>Geser ke kategori yang tepat:</h3>
+                        <div id="item-larutan" class="drag-item" draggable="true">
+                            <img src="gula.png" alt="Air Gula"> <span>Air Gula</span>
+                        </div>
+                        <div id="item-koloid" class="drag-item" draggable="true">
+                            <img src="susu.png" alt="Susu"> <span>Susu</span>
+                        </div>
+                        <div id="item-suspensi" class="drag-item" draggable="true">
+                            <img src="pasir.png" alt="Air + Pasir"> <span>Air + Pasir</span>
+                        </div>
+                    </div>
+                    <div class="drop-zones">
+                        <div id="zona-larutan" class="drop-zone" data-correct="item-larutan">
+                            <h4>Larutan</h4>
+                            <p class="feedback"></p>
+                        </div>
+                        <div id="zona-koloid" class="drop-zone" data-correct="item-koloid">
+                            <h4>Koloid</h4>
+                            <p class="feedback"></p>
+                        </div>
+                        <div id="zona-suspensi" class="drop-zone" data-correct="item-suspensi">
+                            <h4>Suspensi</h4>
+                            <p class="feedback"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button class="btn-secondary btn-back" data-target="konsep-dasar">Kembali</button>
+                    <button class="btn-warning btn-reset-all">Reset</button> 
+                    <button class="btn-primary btn-next" data-target="dialog-interlude">Lanjut ke Sesi Diskusi →</button>
+                </div>
+            </div>
+        </section>
+        
+        <section id="dialog-interlude" class="page">
+            <div class="content">
+                <h2>Bukan Hanya Zatnya, Tapi Fasa-nya!</h2>
+                <div class="dialog-interlude-container">
+                    
+                    <div class="dialog-box character-left">
+                        <div class="character-image-container">
+                            <img src="girl.png" alt="Argonita Character" class="character-image"> 
+                        </div>
+                        <div class="dialog-content">
+                            <h4 class="character-name">Argonita</h4>
+                            <p class="dialog-text">
+                                "Ternyata, hampir semua benda disekitar kita adalah koloid, tapii <strong>tidak selalu sama...</strong>"
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="dialog-box character-right">
+                        <div class="dialog-content">
+                            <h4 class="character-name">Fosforus</h4>
+                            <p class="dialog-text">
+                                "Kira-kira apaa ya yang membuatnya berbeda? <strong>Apakah zat penyusunnya?</strong>"
+                            </p>
+                        </div>
+                        <div class="character-image-container">
+                            <img src="boy.png" alt="Fosforus Character" class="character-image">
+                        </div>
+                    </div>
+
+                    <p class="summary-text">
+                        Mari kita cari tahu perbedaannya dari zat penyusun berdasarkan fasanya!
+                    </p>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button class="btn-secondary btn-back" data-target="eksplorasi-awal">← Kembali</button>
+                    <button class="btn-primary btn-next" data-target="jenis-koloid">Lanjut Jenis Koloid →</button>
+                </div>
+            </div>
+        </section>
+        
+        <section id="jenis-koloid" class="page">
+            <div class="content">
+                <h2>8 Jenis Koloid Berdasarkan Fase Dispersi</h2>
+                <p>Koloid dikelompokkan berdasarkan fase dari zat yang tersebar (terdispersi) dan medium penyebarannya (pendispersi).</p>
+                
+                <div class="table-container">
+                    <table class="interactive-table custom-table-koloid">
+                        <thead>
+                          <tr>
+                            <th>No</th>
+                            <th>Jenis Koloid</th>
+                            <th>Fase Terdispersi</th>
+                            <th>Medium Pendispersi</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr data-url="ruby.html">
+                            <td>1</td>
+                            <td>Sol Padat</td>
+                            <td>Padat</td>
+                            <td>Padat</td>
+                          </tr>
+                          <tr data-url="odol.html">
+                            <td>2</td>
+                            <td>Sol Cair</td>
+                            <td>Padat</td>
+                            <td>Cair</td>
+                          </tr>
+                          <tr data-url="asap.html">
+                            <td>3</td>
+                            <td>Aerosol Padat</td>
+                            <td>Padat</td>
+                            <td>Gas</td>
+                          </tr>
+                          <tr data-url="mentega.html">
+                            <td>4</td>
+                            <td>Emulsi Padat</td>
+                            <td>Cair</td>
+                            <td>Padat</td>
+                          </tr>
+                          <tr data-url="santan.html">
+                            <td>5</td>
+                            <td>Emulsi Cair</td>
+                            <td>Cair</td>
+                            <td>Cair</td>
+                          </tr>
+                          <tr data-url="awan.html">
+                            <td>6</td>
+                            <td>Aerosol Cair</td>
+                            <td>Cair</td>
+                            <td>Gas</td>
+                          </tr>
+                          <tr data-url="kasurbusa.html">
+                            <td>7</td>
+                            <td>Busa Padat</td>
+                            <td>Gas</td>
+                            <td>Padat</td>
+                          </tr>
+                          <tr data-url="gelembung.html">
+                            <td>8</td>
+                            <td>Busa Cair</td>
+                            <td>Gas</td>
+                            <td>Cair</td>
+                          </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box koloid mt-4">
+                    <p>💡 Baris-baris pada tabel ini dapat diklik! Kamu akan diarahkan ke halaman detail.</p>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button class="btn-secondary btn-back" data-target="dialog-interlude">← Kembali</button>
+                    <button class="btn-primary btn-next" data-target="quiz-drag-drop">Lanjut Latihan →</button>
+                </div>
+            </div>
+        </section>
+        
+        <section id="quiz-drag-drop" class="page">
+            <div class="content">
+                <h2>Latihan: Drag & Drop Jenis Koloid</h2>
+                <p>Pasangkanlah contoh benda di kiri dengan jenis koloid yang tepat di kotak biru!</p>
+
+                <div class="drag-drop-jenis-koloid-container">
+                    
+                    <div class="drop-zones-koloid">
+                        <div class="koloid-pair">
+                            <div class="koloid-example">
+                                <img src="kacawarna.png" alt="Kaca Berwarna">
+                                <span>Kaca Berwarna</span>
+                            </div>
+                            <div class="drop-zone-koloid" data-correct="answer-solpadat">
+                                <p class="feedback-koloid">Jenis Koloid?</p>
+                            </div>
+                        </div>
+
+                        <div class="koloid-pair">
+                            <div class="koloid-example">
+                                <img src="tinta.png" alt="Tinta">
+                                <span>Tinta</span>
+                            </div>
+                            <div class="drop-zone-koloid" data-correct="answer-solcair"> 
+                                <p class="feedback-koloid">Jenis Koloid?</p>
+                            </div>
+                        </div>
+
+                        <div class="koloid-pair">
+                            <div class="koloid-example">
+                                <img src="kabut.png" alt="Kabut">
+                                <span>Kabut</span>
+                            </div>
+                            <div class="drop-zone-koloid" data-correct="answer-aerosolcair">
+                                <p class="feedback-koloid">Jenis Koloid?</p>
+                            </div>
+                        </div>
+
+                        <div class="koloid-pair">
+                            <div class="koloid-example">
+                                <img src="mutiara.png" alt="Mutiara">
+                                <span>Mutiara</span>
+                            </div>
+                            <div class="drop-zone-koloid" data-correct="answer-emulsipadat">
+                                <p class="feedback-koloid">Jenis Koloid?</p>
+                            </div>
+                        </div>
+
+                        <div class="koloid-pair">
+                            <div class="koloid-example">
+                                <img src="eskrim.png" alt="Es Krim">
+                                <span>Es Krim</span>
+                            </div>
+                            <div class="drop-zone-koloid" data-correct="answer-emulsicair">
+                                <p class="feedback-koloid">Jenis Koloid?</p>
+                            </div>
+                        </div>
+                        
+                        <div class="koloid-pair">
+                            <div class="koloid-example">
+                                <img src="styrofoam.png" alt="Styrofoam">
+                                <span>Styrofoam</span>
+                            </div>
+                            <div class="drop-zone-koloid" data-correct="answer-busapadt">
+                                <p class="feedback-koloid">Jenis Koloid?</p>
+                            </div>
+                        </div>
+                        
+                        <div class="koloid-pair">
+                            <div class="koloid-example">
+                                <img src="krimkocok.png" alt="Krim Kocok">
+                                <span>Krim Kocok</span>
+                            </div>
+                            <div class="drop-zone-koloid" data-correct="answer-busacair">
+                                <p class="feedback-koloid">Jenis Koloid?</p>
+                            </div>
+                        </div>
+
+                        <div class="koloid-pair">
+                            <div class="koloid-example">
+                                <img src="asappabrik.png" alt="Asap Pabrik">
+                                <span>Asap Pabrik</span>
+                            </div>
+                            <div class="drop-zone-koloid" data-correct="answer-aerosolpadat">
+                                <p class="feedback-koloid">Jenis Koloid?</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="drag-items-koloid" class="drag-items-koloid">
+                        <div id="answer-solpadat" class="drag-item-koloid" draggable="true">Sol Padat</div>
+                        <div id="answer-solcair" class="drag-item-koloid" draggable="true">Sol Cair</div>
+                        <div id="answer-aerosolcair" class="drag-item-koloid" draggable="true">Aerosol Cair</div>
+                        <div id="answer-emulsipadat" class="drag-item-koloid" draggable="true">Emulsi Padat</div>
+                        <div id="answer-emulsicair" class="drag-item-koloid" draggable="true">Emulsi Cair</div>
+                        <div id="answer-busapadt" class="drag-item-koloid" draggable="true">Busa Padat</div>
+                        <div id="answer-busacair" class="drag-item-koloid" draggable="true">Busa Cair</div>
+                        <div id="answer-aerosolpadat" class="drag-item-koloid" draggable="true">Aerosol Padat</div>
+                    </div>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button class="btn-secondary btn-back" data-target="jenis-koloid">← Kembali</button>
+                    <button class="btn-warning btn-reset-koloid">Reset Latihan</button> 
+                    <button class="btn-primary btn-next" data-target="percobaan-rumah">Lanjut Percobaan Rumah →</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="percobaan-rumah" class="page"> 
+               <div class="content">
+                <h2>Saatnya Mengerjakan Tugas!</h2>
+                <p>Ayo buat sebuah poster dengan tema: Jenis-Jenis Koloid dalam Kehidupan Sehari-hari yang memuat:</p>
+                <div class="experiment-steps">
+                    <ol>
+                        <li>Pengertian koloid secara singkat</li>
+                        <li>Klasifikasi dan contoh jenis-jenis koloid</li>
+                        <li>Ilustrasi/gambar pendukung yang relevan</li>
+                        <li>Sumber referensi</li>
+                    </ol>
+                </div>
+                <p>Dokumentasikan hasil percobaanmu dan kumpulkan melalui link di bawah ini!</p>
+                <div class="submission-container">
+                    <div class="qr-placeholder">
+                        <img src="qrpengumpulan.jpg" alt="QR Code untuk Pengumpulan Tugas">
+                    </div>
+                    <a href="https://forms.gle/A4ZYT4WLNSZwCzRT7" target="_blank" class="btn-primary">Atau Klik Link Ini</a>
+                </div>
+                <div class="navigation-buttons">
+                    <button class="btn-secondary btn-back" data-target="quiz-drag-drop">Kembali</button> 
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
