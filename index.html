@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eksplorasi Dunia Koloid - Pembelajaran Interaktif</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> 
+    
+    <style>
+/* ----- GENERAL STYLING & VARIABLES ----- */
+:root {
+    --primary-color: #3b82f6; /* Biru */
+    --secondary-color: #1e293b; /* Abu gelap */
+    --background-color: #f1f5f9; /* Abu muda */
+    --text-color: #334155;
+    --white-color: #ffffff;
+    --correct-color: #22c55e;
+    --wrong-color: #ef4444;
+
+    /* BORDER COLORS for INFO BOXES */
+    --larutan-border: #3b82f6;
+    --koloid-border: #22c55e;
+    --suspensi-border: #ef4444;
+    
+    /* PARTICLE COLORS */
+    --larutan-particle-color: #1d4ed8; /* Biru gelap */
+    --koloid-particle-color: #059669; /* Hijau gelap */
+    --suspensi-particle-color: #b91c1c; /* Merah gelap */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    /* --- PENGATURAN BACKGROUND GAMBAR --- */
+    /* CATATAN: Pastikan 'background.png' ada di folder yang sama */
+    background-image: url('background.png'); 
+    background-size: cover; 
+    background-position: center center; 
+    background-repeat: no-repeat; 
+    background-attachment: fixed; 
+    /* ------------------------------------- */
+    
+    background-color: #f1f5f9; /* Fallback color */
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* FIX KRITIS: Mencegah scroll horizontal SAMA SEKALI */
+    overflow-x: hidden !important; 
+}
+
+.container {
+    width: 100%;
+    /* PERBAIKAN KRITIS: Max width 100% dan HILANGKAN SEMUA PADDING/MARGIN HORIZONTAL */
+    max-width: 100%; 
+    margin: 0 auto; 
+    padding: 0; 
+    position: relative;
+    perspective: 1000px;
+}
+
+/* ----- PAGE TRANSITION & LAYOUT ----- */
+.page {
+    background-color: rgba(255, 255, 255, 0.95); 
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    /* PERBAIKAN: Kurangi padding desktop/laptop */
+    padding: 25px; 
+    width: 100%;
+    display: none; 
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+.page.active {
+    display: block; 
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.content {
+    text-align: center;
+}
+
+/* ----- TYPOGRAPHY & BUTTONS ----- */
+h1, h2 {
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+}
+
+.btn-primary, .btn-secondary, .btn-warning {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 5px;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+}
+
+.btn-secondary {
+    background-color: #e2e8f0;
+    color: var(--secondary-color);
+}
+
+.btn-warning {
+    background-color: #f97316; 
+    color: var(--white-color);
+}
+
+.navigation-buttons {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.btn-back {
+    margin-right: auto; /* Untuk memastikan tombol kembali di kiri */
+}
+.btn-next {
+    margin-left: auto; /* Untuk memastikan tombol lanjut di kanan */
+}
+
+
+/* ----- STYLING TABEL INTERAKTIF & INFO BOXES ----- */
+.table-container {
+    /* Ini memungkinkan tabel discroll secara horizontal jika lebar tabel melebihi container */
+    overflow-x: auto;
+    margin-bottom: 30px;
+    padding: 10px 0;
+}
+
+.interactive-table {
+    width: 100%;
+    border-collapse: collapse;
+    /* min-width harus dipertahankan karena struktur tabel */
+    min-width: 700px; 
+    margin: 0 auto;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.interactive-table th, .interactive-table td {
+    padding: 15px 10px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+    vertical-align: middle;
+}
+
+.interactive-table th {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    font-weight: 700;
+}
+
+.custom-table-koloid tbody tr {
+    cursor: pointer; 
+    transition: background-color 0.3s;
+}
+
+.custom-table-koloid tbody tr:hover {
+    background-color: #e0f2fe; 
+}
+
+
+/* ----- INFO BOXES (Larutan, Koloid, Suspensi) ----- */
+.info-box {
+    padding: 20px; 
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-top: 25px;
+    text-align: left;
+    max-width: 750px; 
+    margin-left: auto;
+    margin-right: auto;
+    border-left: 6px solid transparent; 
+    background-color: var(--white-color); 
+}
+.info-box ul {
+    list-style-type: '👉';
+    padding-left: 25px;
+}
+.info-box li {
+    margin-bottom: 8px;
+    padding-left: 5px;
+}
+.mt-3 {
+    margin-top: 1rem !important;
+}
+
+.info-box.larutan {
+    border-left-color: var(--larutan-border); 
+    background-color: #e0f2fe; 
+}
+
+.info-box.koloid {
+    border-left-color: var(--koloid-border); 
+    background-color: #f0fdf4; 
+}
+
+.info-box.suspensi {
+    border-left-color: var(--suspensi-border); 
+    background-color: #fee2e2; 
+}
+
+/* ================================================= */
+/* ----- STYLING DETAIL PAGE (Perbandingan) ----- */
+/* ================================================= */
+
+.detail-page h2, .detail-page p {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.detail-page h3 {
+    margin-top: 30px;
+    color: var(--primary-color);
+    text-align: center;
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+}
+
+.comparison-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.comparison-item {
+    background-color: var(--white-color);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    flex: 1 1 250px; /* Fleksibel dan minimal lebar 250px */
+    max-width: 300px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    border: 1px solid #e2e8f0;
+}
+.comparison-item:hover {
+    transform: translateY(-5px);
+}
+
+/* ANIMASI PARTIKEL (SIMULASI MIKROSKOPIS) */
+.particle-animation-container {
+    height: 100px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f8fafc;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-name: moveParticle;
+}
+
+/* LARUTAN (Sangat Kecil & Cepat) */
+.larutan-p {
+    width: 8px;
+    height: 8px;
+    background-color: var(--larutan-particle-color);
+    animation-duration: 5s;
+}
+.small-anim-larutan {
+    background-color: #f0fdf4; /* Warna jernih */
+}
+@keyframes moveParticle {
+    0%, 100% { 
+        transform: translate(0, 0); 
+        opacity: 1;
+    }
+    25% { 
+        transform: translate(100%, 50%); 
+    }
+    50% { 
+        transform: translate(0%, 90%); 
+    }
+    75% { 
+        transform: translate(50%, 20%); 
+    }
+}
+
+/* KOLOID (Sedang & Bergerak Zig-Zag/Brownian Motion) */
+.koloid-p {
+    width: 15px;
+    height: 15px;
+    background-color: var(--koloid-particle-color);
+    animation-duration: 8s; 
+    animation-name: brownianMotion;
+}
+.small-anim-koloid {
+    background-color: #f9fafb; /* Keruh */
+}
+@keyframes brownianMotion {
+    0% { transform: translate(10%, 10%); }
+    20% { transform: translate(80%, 30%); }
+    40% { transform: translate(5%, 70%); }
+    60% { transform: translate(60%, 5%); }
+    80% { transform: translate(20%, 80%); }
+    100% { transform: translate(10%, 10%); }
+}
+
+/* SUSPENSI (Besar & Cepat Mengendap) */
+.suspensi-p {
+    width: 20px;
+    height: 20px;
+    background-color: var(--suspensi-particle-color);
+    animation-duration: 10s; 
+    animation-name: sedimentation;
+}
+.small-anim-suspensi {
+    background-color: #fef2f2; /* Sangat Keruh */
+}
+@keyframes sedimentation {
+    0% { transform: translate(10%, 10%) }
+    50% { transform: translate(70%, 50%) }
+    80%, 100% { 
+        transform: translate(30%, 85%); 
+    } /* Partikel cenderung mengendap di bawah */
+}
+
+
+/* ----- EKSPLORASI AWAL: DRAG & DROP (Larutan/Koloid/Suspensi) ----- */
+.drag-drop-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+.items-to-drag {
+    background-color: var(--background-color);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.drag-item {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 8px; 
+    background-color: var(--white-color);
+    padding: 10px 15px; 
+    min-height: 140px; 
+    border: 2px dashed #94a3b8;
+    border-radius: 8px;
+    margin: 10px auto;
+    cursor: grab;
+    font-weight: 600;
+    max-width: 200px;
+}
+
+.drag-item img {
+    width: 80px; 
+    height: 80px;
+    object-fit: cover; 
+    border-radius: 5px; 
+    border: 1px solid #e2e8f0;
+}
+
+.drop-zones {
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
+    flex-wrap: wrap;
+    padding: 10px;
+}
+
+.drop-zone {
+    background-color: #fff;
+    border: 2px dashed var(--primary-color);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    min-height: 250px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-width: 150px;
+}
+
+/* ================================================= */
+/* ----- STYLING DIALOG INTERLUDE (Argonita/Fosforus) ----- */
+/* ================================================= */
+
+.dialog-interlude-container {
+    max-width: 900px;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 20px;
+}
+
+.dialog-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: var(--white-color);
+}
+
+.character-image-container {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--primary-color);
+    background-color: var(--background-color);
+}
+
+.character-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.dialog-content {
+    flex-grow: 1;
+    text-align: left;
+}
+
+.character-name {
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.dialog-text {
+    padding: 10px 15px;
+    border-radius: 10px;
+    position: relative;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-top: 0;
+}
+
+/* Styling untuk Tokoh KIRI (Argonita) */
+.character-left {
+    align-self: flex-start; 
+    max-width: 80%;
+}
+.character-left .dialog-text {
+    background-color: #e0f2fe; /* Biru Muda */
+    border-top-left-radius: 0; 
+}
+
+.character-left .dialog-text::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-right-color: #e0f2fe;
+    border-top-color: #e0f2fe;
+    top: 0;
+    left: -17px;
+}
+
+/* Styling untuk Tokoh KANAN (Fosforus) */
+.character-right {
+    align-self: flex-end; 
+    flex-direction: row-reverse; 
+    text-align: right;
+    max-width: 80%;
+}
+.character-right .dialog-content {
+    text-align: right;
+}
+.character-right .character-name {
+    color: var(--koloid-border); /* Hijau */
+}
+.character-right .character-image-container {
+    border-color: var(--koloid-border);
+}
+.character-right .dialog-text {
+    background-color: #f0fdf4; /* Hijau Muda */
+    border-top-right-radius: 0; 
+}
+
+.character-right .dialog-text::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-left-color: #f0fdf4;
+    border-top-color: #f0fdf4;
+    top: 0;
+    right: -17px;
+}
+
+.summary-text {
+    margin: 10px auto;
+    font-style: italic;
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+/* ================================================= */
+/* ----- STYLING BARU: DRAG & DROP JENIS KOLOID ----- */
+/* ================================================= */
+
+.drag-drop-jenis-koloid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    max-width: 1000px;
+    margin: 30px auto;
+}
+
+.drop-zones-koloid {
+    flex-basis: 65%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.koloid-pair {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: var(--background-color);
+}
+
+.koloid-example {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: 600;
+    text-align: center;
+    width: 100%;
+    min-height: 120px;
+}
+
+.koloid-example img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.drop-zone-koloid {
+    width: 100%;
+    min-height: 40px;
+    padding: 8px;
+    border: 2px dashed var(--primary-color);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column; 
+    gap: 5px; 
+    align-items: center;
+    justify-content: center;
+    background-color: #e0f2fe; 
+    transition: background-color 0.2s;
+}
+
+.drag-items-koloid {
+    flex-basis: 35%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #fff;
+    justify-content: center;
+    align-content: flex-start; 
+}
+
+.drag-item-koloid {
+    padding: 10px 15px;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border-radius: 50px;
+    cursor: grab;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.1s;
+    text-align: center;
+}
+
+.drag-item-koloid:active {
+    cursor: grabbing;
+    transform: scale(1.05);
+}
+
+.feedback-koloid {
+    margin: 0;
+    font-weight: 600;
+}
+
+.correct {
+    color: var(--correct-color);
+}
+
+.wrong {
+    color: var(--wrong-color);
+}
+
+/* ================================================= */
+/* ----- STYLING PERCOBAAN RUMAH (Percobaan Rumah) ----- */
+/* ================================================= */
+
+.experiment-steps {
+    max-width: 600px;
+    margin: 20px auto;
+    text-align: left;
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    border-left: 5px solid #f97316;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.experiment-steps ol {
+    list-style-type: decimal;
+    padding-left: 20px;
+}
+
+.experiment-steps li {
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+.submission-container {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.qr-placeholder img {
+    width: 150px;
+    height: 150px;
+    border: 5px solid var(--white-color);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+
+/* ================================================= */
+/* ----- RESPONSIVE DESIGN FIX (Laptop & Mobile) ----- */
+/* ================================================= */
+
+/* MEDIA QUERY untuk Laptop Menengah (di bawah 1440px) */
+@media (max-width: 1440px) {
+    /* Padding halaman di laptop tetap 25px agar cukup lega */
+    .page {
+        padding: 25px; 
+    }
+}
+
+/* MEDIA QUERY untuk Tablet dan Laptop Kecil (di bawah 850px) */
+@media (max-width: 850px) {
+    /* Ubah tata letak Drag & Drop Jenis Koloid menjadi satu kolom */
+    .drag-drop-jenis-koloid-container {
+        flex-direction: column;
+    }
+    .drop-zones-koloid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    .drag-items-koloid {
+        padding: 10px;
+    }
+}
+
+/* MEDIA QUERY untuk Perangkat Mobile (di bawah 767px) */
+@media (max-width: 767px) {
+    .container {
+        /* PADDING DIHILANGKAN */
+        margin: 0 auto; 
+        padding: 0; 
+    }
+
+    .page {
+        /* PERBAIKAN KRITIS: Padding sangat kecil untuk memaksimalkan ruang konten */
+        padding: 15px; 
+        border-radius: 10px;
+    }
+    
+    /* Mengurangi ukuran font pada judul utama */
+    h1 {
+        font-size: 1.8rem;
+    }
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    /* Mengurangi padding tabel untuk memberi ruang lebih */
+    .interactive-table th, .interactive-table td {
+        padding: 10px 5px;
+        font-size: 0.8rem;
+    }
+
+    /* Mengurangi lebar maksimum untuk dialog box agar tidak terlalu besar */
+    .character-left, .character-right {
+        max-width: 100%;
+    }
+    
+    /* Menyesuaikan item drag and drop agar tidak terlalu besar */
+    .drag-item {
+        min-height: 120px;
+        max-width: 150px;
+        padding: 5px 10px;
+    }
+    .drag-item img {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .drop-zone {
+        min-height: 200px;
+        padding: 15px;
+    }
+    
+    /* Mengatur ulang tata letak tombol navigasi pada perangkat kecil */
+    .navigation-buttons {
+        justify-content: space-around;
+        gap: 10px;
+    }
+    .btn-primary, .btn-secondary, .btn-warning {
+        flex: 1 1 45%; 
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+    .btn-back, .btn-next {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    /* Eksplorasi Awal */
+    .items-to-drag, .drop-zones {
+        flex-basis: auto;
+    }
+}
+
+
+/* ----- NON-MOBILE/Desktop STYLES (min-width: 768px) ----- */
+@media (min-width: 768px) {
+    /* Eksplorasi Awal */
+    .drag-drop-container {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+    .items-to-drag {
+        flex-basis: 30%;
+    }
+    .drop-zones {
+        flex-basis: 70%;
+        display: grid; 
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    /* Dialog Interlude */
+    .character-left, .character-right {
+        max-width: 65%; /* Lebar pesan pada desktop */
+    }
+    
+    /* Drag & Drop Jenis Koloid */
+    @media (min-width: 850px) {
+        .drag-drop-jenis-koloid-container {
+            flex-direction: row;
+            align-items: flex-start;
+        }
+        .drop-zones-koloid {
+            flex-basis: 60%; 
+            grid-template-columns: repeat(2, 1fr); 
+        }
+        .drag-items-koloid {
+            flex-basis: 40%;
+        }
+    }
+
+    /* Gaya tombol kembali di halaman detail */
+    .btn-back-koloid {
+        display: inline-block;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 30px; 
+        background-color: var(--koloid-border); 
+        color: var(--white-color);
+        text-decoration: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-back-koloid:hover {
+        background-color: #16a34a;
+    }
+
+    /* Modifikasi navigation-buttons untuk detail page yang hanya punya 1 tombol */
+    .detail-container .navigation-buttons {
+        justify-content: center; 
+    }
+}
+    </style>
+    </head>
+<body>
+
+    <div class="container">
+        <section id="landing-page" class="page active">
+            <div class="content">
+                <div class="animated-shapes">
+                    <div class="shape shape-1"></div>
+                    <div class="shape shape-2"></div>
+                    <div class="shape shape-3"></div>
+                </div>
+                <h1 class="main-title">Ada Dunia Tak Terlihat di Sekitarmu...</h1>
+                <p class="subtitle">Dari kabut pagi hingga segelas susu yang kamu minum. Penasaran? </p>
+                <button id="btn-start-explore" class="btn-primary" data-target="konsep-dasar">Mulai Eksplorasi! <span class="arrow">→</span></button>
+            </div>
+        </section>
+
+        <section id="konsep-dasar" class="page">
+            <div class="content">
+                <h2>Membandingkan Tiga Jenis Dispersi</h2>
+                <p>Pelajari karakteristik dasar dari Larutan, Koloid, dan Suspensi sebelum kita menjelajah lebih jauh.</p>
+                <div class="table-container">
+                    <table class="interactive-table">
+                        <thead>
+                            <tr>
+                                <th>Karakteristik</th>
+                                <th>Dispersi Larutan</th>
+                                <th>Dispersi Koloid</th>
+                                <th>Dispersi Kasar (Suspensi)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Homogenitas</strong></td>
+                                <td>Homogen Sejati</td>
+                                <td>Tampak Homogen (Heterogen Mikroskopis)</td>
+                                <td>Heterogen Sejati</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fase</strong></td>
+                                <td>Satu Fase</td>
+                                <td>Dua Fase</td>
+                                <td>Dua Fase</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Kejernihan</strong></td>
+                                <td>Jernih dan Tembus Cahaya</td>
+                                <td>Keruh (Menghamburkan Cahaya)</td>
+                                <td>Sangat Keruh</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Penyaringan</strong></td>
+                                <td>Tidak Dapat Disaring</td>
+                                <td>Tidak Dapat Disaring dengan Kertas Biasa</td>
+                                <td>Dapat Disaring dengan Kertas Biasa</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Stabilitas</strong></td>
+                                <td>Stabil (Tidak Mengendap)</td>
+                                <td>Stabil (Tidak Mengendap)</td>
+                                <td>Tidak Stabil (Mengendap)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Diameter Partikel</strong></td>
+                                <td>&lt; 10<sup>-7</sup> cm</td>
+                                <td>10<sup>-7</sup> &ndash; 10<sup>-5</sup> cm</td>
+                                <td>&gt; 10<sup>-5</sup> cm</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td><button id="btn-detail-larutan" class="btn-primary btn-next-detail" data-target="detail-larutan">Pelajari Lebih Lanjut →</button></td>
+                                <td><button id="btn-detail-koloid" class="btn-primary btn-next-detail" data-target="detail-koloid">Pelajari Lebih Lanjut →</button></td>
+                                <td><button id="btn-detail-kasar" class="btn-primary btn-next-detail" data-target="detail-suspensi">Pelajari Lebih Lanjut →</button></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="navigation-buttons">
+                    <button class="btn-secondary btn-back" data-target="landing-page">Kembali</button>
+                    <button class="btn-primary btn-next" data-target="eksplorasi-awal">Lanjut Eksplorasi →</button>
+                </div>
+            </div>
+        </section>
+        
+        <section id="detail-larutan" class="page detail-page">
+            <div class="content">
+                <h2>Dispersi Larutan (Homogen Sejati)</h2>
+                <p>Larutan adalah campuran yang benar-benar <strong>homogen</strong>, di mana zat terlarut tersebar merata hingga ke tingkat molekul. Partikelnya sangat kecil, kurang dari 10<sup>-7</sup> cm, sehingga tidak dapat dilihat dengan mikroskop ultra dan tidak dapat dipisahkan melalui penyaringan biasa maupun ultra.</p>
+                
+                <h3>🔬 Perbedaan Partikel dan Stabilitas</h3>
+
+                <div class="comparison-grid">
+                    <div class="comparison-item" id="comp-larutan">
+                        <h4>Larutan (Contoh: Air Teh)</h4>
+                        <div class="particle-animation-container small-anim-larutan">
+                            <div class="particle larutan-p"></div>
+                            <div class="particle larutan-p" style="animation-delay: -1s; animation-duration: 9s;"></div>
+                            <div class="particle larutan-p" style="animation-delay: -3s; animation-duration: 7s;"></div>
+                        </div>
+                        <p>Sifat Khas: <strong>Homogen</strong>, <strong>Jernih</strong>, dan <strong>Tidak dapat disaring</strong>.</p>
+                    </div>
+                    
+                    <div class="comparison-item" id="comp-koloid">
+                        <h4>Koloid (Contoh: Susu)</h4>
+                        <div class="particle-animation-container small-anim-koloid">
+                            <div class="particle koloid-p"></div>
+                            <div class="particle koloid-p" style="animation-delay: -2s; animation-duration: 8s;"></div>
+                            <div class="particle koloid-p" style="animation-delay: -4s; animation-duration: 12s;"></div>
+                        </div>
+                        <p>Sifat Khas: <strong>Tampak homogen</strong>, <strong>Keruh tanpa endapan</strong>, dan <strong>Dapat disaring dengan kertas saring ultra</strong>.</p>
+                    </div>
+                    
+                    <div class="comparison-item" id="comp-suspensi">
+                        <h4>Suspensi (Contoh: Kopi Tubruk ☕)</h4>
+                        <div class="particle-animation-container small-anim-suspensi">
+                            <div class="particle suspensi-p"></div>
+                            <div class="particle suspensi-p" style="animation-delay: -1s; animation-duration: 4s;"></div>
+                            <div class="particle suspensi-p" style="animation-delay: -3s; animation-duration: 6s;"></div>
+                        </div>
+                        <p>Sifat Khas: <strong>Heterogen</strong>, <strong>Keruh</strong>, <strong>Ada endapan</strong>, dan <strong>Dapat disaring</strong>.</p>
+                    </div>
+                </div>
+
+                <div class="info-box larutan">
+                    <p>🔑 <strong>Contoh Larutan Rumah Tangga:</strong></p>
+                    <ul>
+                        <li><strong>Air Sirup:</strong> Pemanis dan pewarna terlarut sempurna dalam air, menghasilkan campuran jernih.</li>
+                        <li><strong>Air Gula:</strong> Gula (sukrosa) terdispersi secara molekuler di dalam air.</li>
+                        <li><strong>Air Garam:</strong> Garam dapur (NaCl) terionisasi dan menyebar merata di seluruh air.</li>
+                    </ul>
+                    <p class="mt-3">Larutan selalu transparan, jernih, dan tidak pernah mengendap.</p>
+                </div>
+                
+                <div class="navigation-buttons">
+                    <button class="btn-secondary btn-back" data-target="konsep-dasar">← Kembali ke Tabel</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="detail-koloid" class="page detail-page">
+            <div class="content">
+                <h2>Dispersi Koloid (Dunia Tengah)</h2>
+                <p>Koloid adalah "dunia tengah" antara larutan dan suspensi. Ukuran partikelnya berada di antara 10<sup>-7</sup> &ndash; 10<sup>-5</sup> cm.</p>
+                
+                <h3>🔬 Perbedaan Partikel dan Stabilitas</h3>
+
+                <div class="comparison-grid">
+                    <div class="comparison-item" id="comp-larutan">
+                        <h4>Larutan (Contoh: Air Teh)</h4>
+                        <div class="particle-animation-container small-anim-larutan">
+                            <div class="particle larutan-p"></div>
+                            <div class="particle larutan-p" style="animation-delay: -1s; animation-duration: 9s;"></div>
+                            <div class="particle larutan-p" style="animation-delay: -3s; animation-duration: 7s;"></div>
+                        </div>
+                        <p>Sifat Khas: <strong>Homogen</strong>, <strong>Jernih</strong>, dan <strong>Tidak dapat disaring</strong>.</p>
+                    </div>
+                    
+                    <div class="comparison-item" id="comp-koloid">
+                        <h4>Koloid (Contoh: Susu)</h4>
+                        <div class="particle-animation-container small-anim-koloid">
+                            <div class="particle koloid-p"></div>
+                            <div class="particle koloid-p" style="animation-delay: -2s; animation-duration: 8s;"></div>
+                            <div class="particle koloid-p" style="animation-delay: -4s; animation-duration: 12s;"></div>
+                        </div>
+                        <p>Sifat Khas: <strong>Tampak homogen</strong>, <strong>Keruh tanpa endapan</strong>, dan <strong>Dapat disaring dengan kertas saring ultra</strong>.</p>
+                    </div>
+                    
+                    <div class="comparison-item" id="comp-suspensi">
+                        <h4>Suspensi (Contoh: Kopi Tubruk ☕)</h4>
+                        <div class="particle-animation-container small-anim-suspensi">
+                            <div class="particle suspensi-p"></div>
+                            <div class="particle suspensi-p" style="animation-delay: -1s; animation-duration: 4s;"></div>
+                            <div class="particle suspensi-p" style="animation-delay: -3s; animation-duration: 6s;"></div>
+                        </div>
+                        <p>Sifat Khas: <strong>Heterogen</strong>, <strong>Keruh</strong>, <strong>Ada endapan</strong>, dan <strong>Dapat disaring</strong>.</p>
+                    </div>
+                </div>
+
+                <div class="info-box koloid">
+                    <p>🔑 <strong>Contoh Koloid di Sekitar Kita:</strong></p>
+                    <ul>
+                        <li><strong>Susu:</strong> Butiran lemak (fase terdispersi) tersebar dalam air (medium pendispersi).</li>
+                        <li><strong>Kabut:</strong> Tetesan air kecil (fase terdispersi) tersebar di udara (medium pendispersi).</li>
+                        <li><strong>Mentega:</strong> Tetesan air (fase terdispersi) tersebar dalam lemak (medium pendispersi).</li>
+                    </ul>
+                    <p class="mt-3">Semua contoh ini tampak homogen dan stabil, tetapi secara mikroskopis mereka heterogen.</p>
+                </div>
+                
+                <div class="navigation-buttons">
+                    <button class="btn-secondary btn-back" data-target="konsep-dasar">← Kembali ke Tabel</button>
+                </div>
+            </div>
+        </section>
+        
+        <section id="detail-suspensi" class="page detail-page">
+            <div class="content">
+                <h2>Dispersi Kasar / Suspensi (Heterogen Sejati)</h2>
+                <p>Suspensi adalah campuran <strong>heterogen sejati</strong> yang mudah dikenali karena partikelnya sangat besar, lebih dari 10<sup>-5</sup> cm. Karena ukurannya, partikel akan <strong>mengendap</strong> seiring waktu akibat gravitasi (tidak stabil), dan campurannya terlihat <strong>sangat keruh</strong>. Partikelnya mudah dipisahkan melalui penyaringan biasa.</p>
+                
+                <h3>🔬 Perbedaan Partikel dan Stabilitas</h3>
+
+                <div class="comparison-grid">
+                    <div class="comparison-item" id="comp-larutan">
+                        <h4>Larutan (Contoh: Air Teh)</h4>
+                        <div class="particle-animation-container small-anim-larutan">
+                            <div class="particle larutan-p"></div>
+                            <div class="particle larutan-p" style="animation-delay: -1s; animation-duration: 9s;"></div>
+                            <div class="particle larutan-p" style="animation-delay: -3s; animation-duration: 7s;"></div>
+                        </div>
+                        <p>Sifat Khas: <strong>Homogen</strong>, <strong>Jernih</strong>, dan <strong>Tidak dapat disaring</strong>.</p>
+                    </div>
+                    
+                    <div class="comparison-item" id="comp-koloid">
+                        <h4>Koloid (Contoh: Susu)</h4>
+                        <div class="particle-animation-container small-anim-koloid">
+                            <div class="particle koloid-p"></div>
+                            <div class="particle koloid-p" style="animation-delay: -2s; animation-duration: 8s;"></div>
+                            <div class="particle koloid-p" style="animation-delay: -4s; animation-duration: 12s;"></div>
+                        </div>
+                        <p>Sifat Khas: <strong>Tampak homogen</strong>, <strong>Keruh tanpa endapan</strong>, dan <strong>Dapat disaring dengan kertas saring ultra</strong>.</p>
+                    </div>
+                    
+                    <div class="comparison-item" id="comp-suspensi">
+                        <h4>Suspensi (Contoh: Kopi Tubruk ☕)</h4>
+                        <div class="particle-animation-container small-anim-suspensi">
+                            <div class="particle suspensi-p"></div>
+                            <div class="particle suspensi-p" style="animation-delay: -1s; animation-duration: 4s;"></div>
+                            <div class="particle suspensi-p" style="animation-delay: -3s; animation-duration: 6s;"></div>
+                        </div>
+                        <p>Sifat Khas: <strong>Heterogen</strong>, <strong>Keruh</strong>, <strong>Ada endapan</strong>, dan <strong>Dapat disaring</strong>.</p>
+                    </div>
+                </div>
+
+                <div class="info-box suspensi">
+                    <p>🔑 <strong>Contoh Suspensi Sederhana:</strong></p>
+                    <ul>
+                        <li><strong>Air Kopi:</strong> Ampas kopi yang tidak larut akan mengendap perlahan di dasar gelas.</li>
+                        <li><strong>Air Lumpur:</strong> Partikel tanah atau pasir terlalu besar untuk larut dan akan mengendap karena gravitasi.</li>
+                    </ul>
+                    <p class="mt-3">Suspensi selalu terlihat keruh, tidak stabil, dan memiliki dua fase yang dapat dipisahkan.</p>
+                </div>
+                
+                <div class="navigation-buttons">
+                    <button class="btn-secondary btn-back" data-target="konsep-dasar">← Kembali ke Tabel</button>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="eksplorasi-awal" class="page">
+            <div class="content">
+                <h2>Apa Bedanya, ya?</h2>
+                <p>Perhatikan gambar-gambar di bawah ini. Menurutmu, apa yang membedakan ketiganya?</p>
+                <div class="drag-drop-container">
+                    <div class="items-to-drag">
+                        <h3>Geser ke kategori yang tepat:</h3>
+                        <div id="item-larutan" class="drag-item" draggable="true">
+                            <img src="gula.png" alt="Air Gula"> <span>Air Gula</span>
+                        </div>
+                        <div id="item-koloid" class="drag-item" draggable="true">
+                            <img src="susu.png" alt="Susu"> <span>Susu</span>
+                        </div>
+                        <div id="item-suspensi" class="drag-item" draggable="true">
+                            <img src="pasir.png" alt="Air + Pasir"> <span>Air + Pasir</span>
+                        </div>
+                    </div>
+                    <div class="drop-zones">
+                        <div id="zona-larutan" class="drop-zone" data-correct="item-larutan">
+                            <h4>Larutan</h4>
+                            <p class="feedback"></p>
+                        </div>
+                        <div id="zona-koloid" class="drop-zone" data-correct="item-koloid">
+                            <h4>Koloid</h4>
+                            <p class="feedback"></p>
+                        </div>
+                        <div id="zona-suspensi" class="drop-zone" data-correct="item-suspensi">
+                            <h4>Suspensi</h4>
+                            <p class="feedback"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button class="btn-secondary btn-back" data-target="konsep-dasar">Kembali</button>
+                    <button class="btn-warning btn-reset-all">Reset</button> 
+                    <button class="btn-primary btn-next" data-target="dialog-interlude">Lanjut ke Sesi Diskusi →</button>
+                </div>
+            </div>
+        </section>
+        
+        <section id="dialog-interlude" class="page">
+            <div class="content">
+                <h2>Bukan Hanya Zatnya, Tapi Fasa-nya!</h2>
+                <div class="dialog-interlude-container">
+                    
+                    <div class="dialog-box character-left">
+                        <div class="character-image-container">
+                            <img src="girl.png" alt="Argonita Character" class="character-image"> 
+                        </div>
+                        <div class="dialog-content">
+                            <h4 class="character-name">Argonita</h4>
+                            <p class="dialog-text">
+                                "Ternyata, hampir semua benda disekitar kita adalah koloid, tapii <strong>tidak selalu sama...</strong>"
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="dialog-box character-right">
+                        <div class="dialog-content">
+                            <h4 class="character-name">Fosforus</h4>
+                            <p class="dialog-text">
+                                "Kira-kira apaa ya yang membuatnya berbeda? <strong>Apakah zat penyusunnya?</strong>"
+                            </p>
+                        </div>
+                        <div class="character-image-container">
+                            <img src="boy.png" alt="Fosforus Character" class="character-image">
+                        </div>
+                    </div>
+
+                    <p class="summary-text">
+                        Mari kita cari tahu perbedaannya dari zat penyusun berdasarkan fasanya!
+                    </p>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button class="btn-secondary btn-back" data-target="eksplorasi-awal">← Kembali</button>
+                    <button class="btn-primary btn-next" data-target="jenis-koloid">Lanjut Jenis Koloid →</button>
+                </div>
+            </div>
+        </section>
+        
+        <section id="jenis-koloid" class="page">
+            <div class="content">
+                <h2>8 Jenis Koloid Berdasarkan Fase Dispersi</h2>
+                <p>Koloid dikelompokkan berdasarkan fase dari zat yang tersebar (terdispersi) dan medium penyebarannya (pendispersi).</p>
+                
+                <div class="table-container">
+                    <table class="interactive-table custom-table-koloid">
+                        <thead>
+                          <tr>
+                            <th>No</th>
+                            <th>Jenis Koloid</th>
+                            <th>Fase Terdispersi</th>
+                            <th>Medium Pendispersi</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr data-url="ruby.html">
+                            <td>1</td>
+                            <td>Sol Padat</td>
+                            <td>Padat</td>
+                            <td>Padat</td>
+                          </tr>
+                          <tr data-url="odol.html">
+                            <td>2</td>
+                            <td>Sol Cair</td>
+                            <td>Padat</td>
+                            <td>Cair</td>
+                          </tr>
+                          <tr data-url="asap.html">
+                            <td>3</td>
+                            <td>Aerosol Padat</td>
+                            <td>Padat</td>
+                            <td>Gas</td>
+                          </tr>
+                          <tr data-url="mentega.html">
+                            <td>4</td>
+                            <td>Emulsi Padat</td>
+                            <td>Cair</td>
+                            <td>Padat</td>
+                          </tr>
+                          <tr data-url="santan.html">
+                            <td>5</td>
+                            <td>Emulsi Cair</td>
+                            <td>Cair</td>
+                            <td>Cair</td>
+                          </tr>
+                          <tr data-url="awan.html">
+                            <td>6</td>
+                            <td>Aerosol Cair</td>
+                            <td>Cair</td>
+                            <td>Gas</td>
+                          </tr>
+                          <tr data-url="kasurbusa.html">
+                            <td>7</td>
+                            <td>Busa Padat</td>
+                            <td>Gas</td>
+                            <td>Padat</td>
+                          </tr>
+                          <tr data-url="gelembung.html">
+                            <td>8</td>
+                            <td>Busa Cair</td>
+                            <td>Gas</td>
+                            <td>Cair</td>
+                          </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="info-box koloid mt-4">
+                    <p>💡 Baris-baris pada tabel ini dapat diklik! (Namun, fitur klik dinonaktifkan di file tunggal ini untuk mencegah error file not found).</p>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button class="btn-secondary btn-back" data-target="dialog-interlude">← Kembali</button>
+                    <button class="btn-primary btn-next" data-target="quiz-drag-drop">Lanjut Latihan →</button>
+                </div>
+            </div>
+        </section>
+        
+        <section id="quiz-drag-drop" class="page">
+            <div class="content">
+                <h2>Latihan: Drag & Drop Jenis Koloid</h2>
+                <p>Pasangkanlah contoh benda di kiri dengan jenis koloid yang tepat di kotak biru!</p>
+
+                <div class="drag-drop-jenis-koloid-container">
+                    
+                    <div class="drop-zones-koloid">
+                        <div class="koloid-pair">
+                            <div class="koloid-example">
+                                <img src="kacawarna.png" alt="Kaca Berwarna">
+                                <span>Kaca Berwarna</span>
+                            </div>
+                            <div class="drop-zone-koloid" data-correct="answer-solpadat">
+                                <p class="feedback-koloid">Jenis Koloid?</p>
+                            </div>
+                        </div>
+
+                        <div class="koloid-pair">
+                            <div class="koloid-example">
+                                <img src="tinta.png" alt="Tinta">
+                                <span>Tinta</span>
+                            </div>
+                            <div class="drop-zone-koloid" data-correct="answer-solcair"> 
+                                <p class="feedback-koloid">Jenis Koloid?</p>
+                            </div>
+                        </div>
+
+                        <div class="koloid-pair">
+                            <div class="koloid-example">
+                                <img src="kabut.png" alt="Kabut">
+                                <span>Kabut</span>
+                            </div>
+                            <div class="drop-zone-koloid" data-correct="answer-aerosolcair">
+                                <p class="feedback-koloid">Jenis Koloid?</p>
+                            </div>
+                        </div>
+
+                        <div class="koloid-pair">
+                            <div class="koloid-example">
+                                <img src="mutiara.png" alt="Mutiara">
+                                <span>Mutiara</span>
+                            </div>
+                            <div class="drop-zone-koloid" data-correct="answer-emulsipadat">
+                                <p class="feedback-koloid">Jenis Koloid?</p>
+                            </div>
+                        </div>
+
+                        <div class="koloid-pair">
+                            <div class="koloid-example">
+                                <img src="eskrim.png" alt="Es Krim">
+                                <span>Es Krim</span>
+                            </div>
+                            <div class="drop-zone-koloid" data-correct="answer-emulsicair">
+                                <p class="feedback-koloid">Jenis Koloid?</p>
+                            </div>
+                        </div>
+                        
+                        <div class="koloid-pair">
+                            <div class="koloid-example">
+                                <img src="styrofoam.png" alt="Styrofoam">
+                                <span>Styrofoam</span>
+                            </div>
+                            <div class="drop-zone-koloid" data-correct="answer-busapadt">
+                                <p class="feedback-koloid">Jenis Koloid?</p>
+                            </div>
+                        </div>
+                        
+                        <div class="koloid-pair">
+                            <div class="koloid-example">
+                                <img src="krimkocok.png" alt="Krim Kocok">
+                                <span>Krim Kocok</span>
+                            </div>
+                            <div class="drop-zone-koloid" data-correct="answer-busacair">
+                                <p class="feedback-koloid">Jenis Koloid?</p>
+                            </div>
+                        </div>
+
+                        <div class="koloid-pair">
+                            <div class="koloid-example">
+                                <img src="asappabrik.png" alt="Asap Pabrik">
+                                <span>Asap Pabrik</span>
+                            </div>
+                            <div class="drop-zone-koloid" data-correct="answer-aerosolpadat">
+                                <p class="feedback-koloid">Jenis Koloid?</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="drag-items-koloid" class="drag-items-koloid">
+                        <div id="answer-solpadat" class="drag-item-koloid" draggable="true">Sol Padat</div>
+                        <div id="answer-solcair" class="drag-item-koloid" draggable="true">Sol Cair</div>
+                        <div id="answer-aerosolcair" class="drag-item-koloid" draggable="true">Aerosol Cair</div>
+                        <div id="answer-emulsipadat" class="drag-item-koloid" draggable="true">Emulsi Padat</div>
+                        <div id="answer-emulsicair" class="drag-item-koloid" draggable="true">Emulsi Cair</div>
+                        <div id="answer-busapadt" class="drag-item-koloid" draggable="true">Busa Padat</div>
+                        <div id="answer-busacair" class="drag-item-koloid" draggable="true">Busa Cair</div>
+                        <div id="answer-aerosolpadat" class="drag-item-koloid" draggable="true">Aerosol Padat</div>
+                    </div>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button class="btn-secondary btn-back" data-target="jenis-koloid">← Kembali</button>
+                    <button class="btn-warning btn-reset-koloid">Reset Latihan</button> 
+                    <button class="btn-primary btn-next" data-target="percobaan-rumah">Lanjut Percobaan Rumah →</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="percobaan-rumah" class="page"> 
+               <div class="content">
+                <h2>Saatnya Mengerjakan Tugas!</h2>
+                <p>Ayo buat sebuah poster dengan tema: Jenis-Jenis Koloid dalam Kehidupan Sehari-hari yang memuat:</p>
+                <div class="experiment-steps">
+                    <ol>
+                        <li>Pengertian koloid secara singkat</li>
+                        <li>Klasifikasi dan contoh jenis-jenis koloid</li>
+                        <li>Ilustrasi/gambar pendukung yang relevan</li>
+                        <li>Sumber referensi</li>
+                    </ol>
+                </div>
+                <p>Dokumentasikan hasil percobaanmu dan kumpulkan melalui link di bawah ini!</p>
+                <div class="submission-container">
+                    <div class="qr-placeholder">
+                        <img src="qrpengumpulan.jpg" alt="QR Code untuk Pengumpulan Tugas">
+                    </div>
+                    <a href="https://forms.gle/A4ZYT4WLNSZwCzRT7" target="_blank" class="btn-primary">Atau Klik Link Ini</a>
+                </div>
+                <div class="navigation-buttons">
+                    <button class="btn-secondary btn-back" data-target="quiz-drag-drop">Kembali</button> 
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const pages = document.querySelectorAll('.page');
+    const container = document.querySelector('.container');
+
+    // ===================================
+    // 1. FUNGSI UTAMA NAVIGASI HALAMAN
+    // ===================================
+    const navigate = (targetId) => {
+        pages.forEach(page => {
+            page.classList.remove('active');
+        });
+
+        const targetPage = document.getElementById(targetId);
+        if (targetPage) {
+            targetPage.classList.add('active');
+        }
+        
+        container.scrollTop = 0; 
+        // Menggunakan replaceState agar tidak menumpuk di history browser
+        if (targetId !== 'landing-page') {
+             window.history.replaceState(null, null, `#${targetId}`);
+        } else {
+             window.history.replaceState(null, null, ' ');
+        }
+        
+        // Panggil reset quiz saat pindah ke halaman quiz-drag-drop
+        if (targetId === 'quiz-drag-drop') {
+            // Beri sedikit waktu agar transisi halaman selesai sebelum mereset
+            setTimeout(resetKoloidDragDrop, 500); 
+        }
+    };
+
+    // Event Listener untuk semua tombol navigasi
+    document.querySelectorAll('[data-target]').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const target = e.currentTarget.getAttribute('data-target');
+            navigate(target);
+        });
+    });
+
+    // Hashing/Deep Linking Handler
+    const initialHash = window.location.hash;
+    if (initialHash) {
+        const targetPageId = initialHash.substring(1); 
+        const targetPage = document.getElementById(targetPageId);
+        
+        if (targetPage && targetPage.classList.contains('page')) {
+            setTimeout(() => {
+                navigate(targetPageId);
+            }, 50); 
+        }
+    } else {
+        navigate('landing-page');
+    }
+
+    // ===================================
+    // 2. Logika Tabel Jenis Koloid (Baris Bisa Diklik)
+    // ===================================
+    const koloidTableRows = document.querySelectorAll('.custom-table-koloid tbody tr');
+
+    koloidTableRows.forEach(row => {
+        row.addEventListener('click', function() {
+            const url = this.getAttribute('data-url');
+            
+            if (url) {
+                // !!! PERHATIAN !!! 
+                // Fitur ini dinonaktifkan untuk mencegah error "File Not Found" 
+                // karena file detail (ruby.html, santan.html, dll.) tidak disertakan.
+                // Jika ingin mengaktifkannya, pastikan file-file tersebut ada!
+                // window.location.href = url;
+                
+                alert('Fitur ini dinonaktifkan di versi file tunggal. Harap pindah ke halaman detail secara manual menggunakan tombol di halaman Konsep Dasar.');
+            }
+        });
+    });
+
+    // ===================================
+    // 3. Logika Drag and Drop Umum (Larutan/Koloid/Suspensi)
+    // ===================================
+    const itemsToDrag = document.querySelectorAll('#eksplorasi-awal .drag-item');
+    const dropZones = document.querySelectorAll('#eksplorasi-awal .drop-zone');
+    const resetAllBtn = document.querySelector('.btn-reset-all');
+    const initialDragContainer = document.querySelector('#eksplorasi-awal .items-to-drag');
+
+    // Inisialisasi posisi drag item
+    itemsToDrag.forEach(item => {
+        if (item.parentElement !== initialDragContainer) {
+            initialDragContainer.appendChild(item);
+        }
+        item.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', e.target.id);
+        });
+    });
+
+    dropZones.forEach(zone => {
+        zone.addEventListener('dragover', (e) => {
+            e.preventDefault(); 
+        });
+
+        zone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const draggedItemId = e.dataTransfer.getData('text/plain');
+            const draggedItem = document.getElementById(draggedItemId);
+            const correctTarget = zone.getAttribute('data-correct');
+            const feedbackElement = zone.querySelector('.feedback');
+
+            // Cek apakah zona sudah terisi
+            if (zone.querySelector('.drag-item')) {
+                feedbackElement.textContent = "Zona ini sudah terisi!";
+                feedbackElement.style.color = '#dc3545';
+                return;
+            }
+
+            if (draggedItem && draggedItem.id === correctTarget) {
+                // Jawaban Benar
+                zone.appendChild(draggedItem);
+                draggedItem.setAttribute('draggable', 'false');
+                feedbackElement.textContent = "✅ Benar!";
+                feedbackElement.style.color = '#4CAF50';
+            } else {
+                // Jawaban Salah
+                feedbackElement.textContent = "❌ Salah, coba lagi!";
+                feedbackElement.style.color = '#F44336';
+                setTimeout(() => {
+                    initialDragContainer.appendChild(draggedItem);
+                    feedbackElement.textContent = ""; 
+                }, 1000); 
+            }
+        });
+    });
+
+    if (resetAllBtn) {
+        resetAllBtn.addEventListener('click', () => {
+            itemsToDrag.forEach(item => {
+                item.setAttribute('draggable', 'true');
+                // Mengembalikan item ke container awal jika dia ada di drop-zone
+                if (item.parentElement.classList.contains('drop-zone')) {
+                    initialDragContainer.appendChild(item);
+                }
+            });
+            document.querySelectorAll('#eksplorasi-awal .feedback').forEach(feedback => {
+                feedback.textContent = "";
+            });
+        });
+    }
+
+    // ===================================
+    // 4. Logika Drag and Drop Jenis Koloid (Quiz)
+    // ===================================
+
+    const dragItemsKoloid = document.querySelectorAll('.drag-item-koloid');
+    const dropZonesKoloid = document.querySelectorAll('.drop-zone-koloid');
+    const resetKoloidBtn = document.querySelector('.btn-reset-koloid');
+    const initialDragContainerKoloid = document.querySelector('#drag-items-koloid');
+
+    // FUNGSI UTAMA: MENGACAK JAWABAN
+    const shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    // Aksi: Acak dan Setel ulang posisi awal
+    const resetKoloidDragDrop = () => {
+        const itemsArray = Array.from(dragItemsKoloid);
+        
+        // 1. Reset item yang terjatuh kembali ke container awal
+        dropZonesKoloid.forEach(zone => {
+            const droppedItem = zone.querySelector('.drag-item-koloid');
+            const feedback = zone.querySelector('.feedback-koloid');
+            if (droppedItem) {
+                initialDragContainerKoloid.appendChild(droppedItem);
+            }
+            feedback.textContent = "Jenis Koloid?";
+            feedback.classList.remove('correct', 'wrong');
+        });
+
+        // 2. Acak urutan jawaban di container awal
+        shuffleArray(itemsArray);
+        itemsArray.forEach(item => {
+            initialDragContainerKoloid.appendChild(item);
+            item.setAttribute('draggable', 'true');
+        });
+    };
+
+    // Panggil saat halaman dimuat (untuk mengacak pertama kali)
+    resetKoloidDragDrop(); 
+
+    // Event Listener untuk Reset Button
+    if (resetKoloidBtn) {
+        resetKoloidBtn.addEventListener('click', resetKoloidDragDrop);
+    }
+    
+    // Drag Events
+    dragItemsKoloid.forEach(item => {
+        item.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', e.target.id);
+        });
+    });
+
+    // Drop Events
+    dropZonesKoloid.forEach(zone => {
+        zone.addEventListener('dragover', (e) => {
+            e.preventDefault(); 
+            zone.style.backgroundColor = '#b3e0ff'; // Efek hover
+        });
+
+        zone.addEventListener('dragleave', () => {
+            zone.style.backgroundColor = '#e0f2fe'; 
+        });
+
+        zone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            zone.style.backgroundColor = '#e0f2fe'; 
+
+            const draggedItemId = e.dataTransfer.getData('text/plain');
+            const draggedItem = document.getElementById(draggedItemId);
+            const correctTarget = zone.getAttribute('data-correct');
+            const feedbackElement = zone.querySelector('.feedback-koloid');
+
+            if (zone.querySelector('.drag-item-koloid')) {
+                // Zona sudah terisi
+                feedbackElement.textContent = "Sudah terisi!";
+                feedbackElement.classList.add('wrong');
+                setTimeout(() => {
+                    feedbackElement.textContent = "Jenis Koloid?";
+                    feedbackElement.classList.remove('wrong');
+                }, 1000);
+                return;
+            }
+            
+            // Cek Jawaban
+            if (draggedItem && draggedItem.id === correctTarget) {
+                // Benar
+                zone.appendChild(draggedItem);
+                draggedItem.setAttribute('draggable', 'false');
+                feedbackElement.textContent = "✅ Benar!";
+                feedbackElement.classList.remove('wrong');
+                feedbackElement.classList.add('correct');
+            } else {
+                // Salah
+                feedbackElement.textContent = "❌ Coba Lagi!";
+                feedbackElement.classList.remove('correct');
+                feedbackElement.classList.add('wrong');
+                
+                // Kembalikan item yang salah ke container awal
+                setTimeout(() => {
+                    initialDragContainerKoloid.appendChild(draggedItem);
+                    feedbackElement.textContent = "Jenis Koloid?";
+                    feedbackElement.classList.remove('wrong');
+                }, 1000); 
+            }
+        });
+    });
+});
+    </script>
+    </body>
+</html>
